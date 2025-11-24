@@ -182,7 +182,7 @@
 .author-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #0d141b;
+  color: #167ee6;
   margin: 0 0 0.25rem 0;
 }
 
@@ -333,7 +333,7 @@
   }
   
   .author-name {
-    color: white;
+    color: rgb(2, 2, 2);
   }
   
   .pagination-btn {

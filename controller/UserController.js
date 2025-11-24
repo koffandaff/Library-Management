@@ -47,7 +47,7 @@ const login = asyncHandler( async (req,res) => {
                 } 
             }, 
                 "Dhruvil12345", // this should be in env variable but it's fine fro now
-                {expiresIn: '20m'}
+                {expiresIn: '1m'}
 
             
             );

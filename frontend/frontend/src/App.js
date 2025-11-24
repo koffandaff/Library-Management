@@ -14,6 +14,10 @@ import CheckoutHistory from './pages/CheckoutHistory';
 import AdminDashboard from './pages/AdminDashboard';
 import PersonalCheckoutHistory from './pages/PersonalCheckoutHistory';
 import EditBook from './pages/EditBook';
+
+
+import api, { Api_Endpoints} from './service/api';
+
 import './App.css';
 
 function App() {
@@ -30,19 +34,51 @@ function App() {
   };
 
   // Mock login function - for testing without backend
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    setUserRole('user'); // Change to 'admin' to test admin features
-    setCurrentPage('home');
-    console.log('User logged in');
+  const handleLogin = async (email, password) => {
+    
+    console.log('HIIIIIIIIII')
+    try {
+      console.log(email, password)
+      const response = await api.post(Api_Endpoints.AUTH.LOGIN, {
+        email,
+        password
+      })
+
+      console.log(response.data)
+      setIsLoggedIn(true);
+      setCurrentPage('home')
+    }
+    catch ( err){
+      console.log('Went to error')
+      console.log({Error: err.message})
+
+    }
   };
 
   // Mock register function
-  const handleRegister = () => {
-    setIsLoggedIn(true);
-    setUserRole('user');
-    setCurrentPage('home');
-    console.log('User registered and logged in');
+  const handleRegister = async (name, email, password, role, adminkey) => {
+    try{
+      console.log(role, adminkey)
+      console.log("Trying to Register")
+      const response = await api.post(Api_Endpoints.AUTH.REGISTER, {
+        name,
+        email,
+        password,
+        role,
+        adminkey,
+      })
+
+      console.log({Data: response.data})
+      setIsLoggedIn(true);
+      setUserRole(role);
+      setCurrentPage('home');
+      console.log('User registered and logged in');
+    }
+    catch(err){
+      console.log(err)
+    }
+    
+    
   };
 
   // Mock logout function

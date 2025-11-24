@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <p className="footer-text">
-          © 2024 Library Management System. All Rights Reserved.
+          © 2025 Library Management System. All Rights Reserved.
         </p>
       </div>
     </footer>

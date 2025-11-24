@@ -13,9 +13,9 @@ const Register = ({ onRegister, onNavigate }) => {
     adminKey: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    console.log(userRole)
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
@@ -23,15 +23,15 @@ const Register = ({ onRegister, onNavigate }) => {
     }
     
     // Validate admin key if admin role selected
-    if (userRole === 'admin' && formData.adminKey !== 'ADMIN123') {
-      alert('Invalid admin key!');
-      return;
-    }
+    // if (formData.role === 'admin' && formData.adminKey !== 'ADMIN123') {
+    //   alert('Invalid admin key!');
+    //   return;
+    // }
     
     console.log('Registration attempt:', { ...formData, userRole });
-    // Simulate registration - in real app, you'd make API call here
+    
     if (onRegister) {
-      onRegister();
+      await onRegister(formData.fullName, formData.email, formData.confirmPassword, userRole, formData.adminKey)
     }
   };
 
@@ -107,9 +107,9 @@ const Register = ({ onRegister, onNavigate }) => {
                   <input
                     type="radio"
                     name="role"
-                    value="user"
+                    value='admin'
                     checked={userRole === 'user'}
-                    onChange={() => handleRoleChange('user')}
+                    onChange={handleInputChange}
                     className="role-radio"
                   />
                   <span className="role-label">User</span>

@@ -12,16 +12,24 @@ const Login = ({ onLogin, onNavigate }) => {
 
   const handleNavigation = () => {
     if(onNavigate){
-      onNavigate('register')
+      onNavigate('register') 
     }
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate login - in  app make API call here
-    console.log('Login attempt:', formData);
-    if (onLogin) {
-      onLogin();
+    
+    try {
+      await onLogin(formData.email, formData.password)
+      
     }
+    catch (err){
+      console.log(err)
+    }
+    finally{
+      console.log(formData)
+    }
+    
+    
   };
 
   const handleInputChange = (e) => {

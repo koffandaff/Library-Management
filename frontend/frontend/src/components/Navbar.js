@@ -108,8 +108,8 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="profile-link admin-link"
                 >
-                  <span className="material-symbols-outlined">admin_panel_settings</span>
-                  <span>Admin</span>
+                  <span className="material-symbols-outlined"></span>
+                  <span>Dashboard</span>
                 </a>
               )}
               
@@ -123,7 +123,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="profile-link"
                 >
-                  <span className="material-symbols-outlined">add</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Add Book</span>
                 </a>
               )}
@@ -137,7 +137,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link"
               >
-                <span className="material-symbols-outlined">account_circle</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Profile</span>
               </a>
               
@@ -150,7 +150,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link logout-btn"
               >
-                <span className="material-symbols-outlined">logout</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Logout</span>
               </a>
             </>
@@ -165,7 +165,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link"
               >
-                <span className="material-symbols-outlined">login</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Login</span>
               </a>
               <a 
@@ -176,7 +176,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link register-btn"
               >
-                <span className="material-symbols-outlined">person_add</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Register</span>
               </a>
             </>
