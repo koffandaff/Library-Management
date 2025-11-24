@@ -1,0 +1,311 @@
+.register-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f7f8;
+  font-family: 'Inter', sans-serif;
+  padding: 2rem 1rem;
+  overflow: hidden;
+}
+
+.register-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(3rem);
+}
+
+.bg-blob-1 {
+  width: 24rem;
+  height: 24rem;
+  top: -25%;
+  left: -25%;
+  background-color: rgba(19, 127, 236, 0.2);
+}
+
+.bg-blob-2 {
+  width: 24rem;
+  height: 24rem;
+  bottom: -25%;
+  right: -25%;
+  background-color: rgba(138, 43, 226, 0.1);
+}
+
+.register-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 28rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(0.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+.register-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.register-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.register-title {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1.2;
+  letter-spacing: -0.033em;
+  margin: 0;
+}
+
+.register-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #64748b;
+  margin: 0;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.form-input {
+  height: 3rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #1f2937;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(207, 219, 231, 0.5);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #137fec;
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2);
+}
+
+.form-input::placeholder {
+  color: #6b7280;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-selection {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.role-option:hover {
+  border-color: #137fec;
+}
+
+.role-option:has(.role-radio:checked) {
+  border-color: #137fec;
+  background-color: #e3f2fd;
+}
+
+.role-radio {
+  margin: 0;
+}
+
+.role-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.admin-key-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.register-button {
+  height: 3rem;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: #137fec;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.025em;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.register-button:hover {
+  background-color: #106bc7;
+}
+
+.login-redirect {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-redirect p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.login-link {
+  background: none;
+  border: none;
+  font-weight: 700;
+  color: #137fec;
+  cursor: pointer;
+  margin-left: 0.25rem;
+  padding: 0;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .register-container {
+    background-color: #101922;
+  }
+  
+  .register-card {
+    background: rgba(16, 25, 34, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .register-title {
+    color: #f1f5f9;
+  }
+  
+  .form-label {
+    color: #e5e7eb;
+  }
+  
+  .form-input {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .form-input:focus {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: #137fec;
+  }
+  
+  .form-input::placeholder {
+    color: #9ca3af;
+  }
+  
+  .role-option {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+  
+  .role-option:hover {
+    border-color: #137fec;
+  }
+  
+  .role-option:has(.role-radio:checked) {
+    border-color: #137fec;
+    background-color: #1e3a5c;
+  }
+  
+  .role-label {
+    color: #e5e7eb;
+  }
+  
+  .login-redirect p {
+    color: #9ca3af;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .register-container {
+    padding: 1rem;
+  }
+  
+  .register-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .role-selection {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

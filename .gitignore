@@ -1,1 +1,60 @@
-./node_modules
+-------------------------------------------------------------------
+
+GLOBAL IGNORING (Applies to both Backend/Root and Frontend folders)
+
+-------------------------------------------------------------------
+
+Dependency folders
+
+node_modules/
+**/node_modules
+
+Logs and runtime data
+
+.log
+npm-debug.log
+yarn-debug.log*
+
+Environment and sensitive variables (IMPORTANT)
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+IDE/Editor settings
+
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+npm-debug.log
+
+-------------------------------------------------------------------
+
+FRONTEND SPECIFIC (Inside the 'frontend' folder)
+
+-------------------------------------------------------------------
+
+React build directory (e.g., from 'npm run build' or create-react-app)
+
+frontend/build
+frontend/dist
+
+Other cache/generated files
+
+frontend/.vite
+frontend/coverage
+
+-------------------------------------------------------------------
+
+BACKEND SPECIFIC (In the Root)
+
+-------------------------------------------------------------------
+
+Express/Node compiled code
+
+/dist
+/build
