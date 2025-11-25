@@ -131,26 +131,18 @@ const deleteBook = asychandler( async (req,res) => {
 //@desc Get a Book By Category
 //@route GET /api/book/category
 //@access public
-const getBookByCategory = asychandler( async (req,res) => {
-    try {
-            console.log('asdf')
-    const {category} = req.body
-    console.log(category)
-    if(!category){
-        return res.status(400).json({message: "Enter Category"})
+const getBookByCategory = asychandler(async (req, res) => {
+    const { category } = req.body // or req.query if using query params
+    if (!category) {
+        return res.status(400).json({ message: "Enter Category" })
     }
-    const cbooks = await books.find({category: category})
-    console.log(cbooks)
-    // return res.json(cbooks)
-    // console.log(Boolean(cbooks), cbooks.length)
-    if(!cbooks){
-        return res.status(404).json({message: 'Book not Found'})
-    } else{
-        console.log('rtee')
+    const cbooks = await books.find({ category: category })
+    
+    // Fix: Check if array is empty, not if it's falsy
+    if (!cbooks || cbooks.length === 0) {
+        return res.status(404).json({ message: 'No books found in this category' })
+    } else {
         return res.status(200).json(cbooks)
-    }
-    } catch (error) {
-        console.log('error-----', error)
     }
 })
 
@@ -158,17 +150,16 @@ const getBookByCategory = asychandler( async (req,res) => {
 //@desc Get a Book By author
 //@route GET /api/book/author
 //@access public
-const getBookByAuthor = asychandler( async (req,res) => {
-    const authorname = req.body
-    if(!authorname){
-        return res.status(400).json({message: "Enter Category"})
+const getBookByAuthor = asychandler(async (req, res) => {
+    const { authorname } = req.body; 
+    if (!authorname) {
+        return res.status(400).json({ message: "Enter Author Name" })
     }
-    const abooks = await books.find({authorname: authorname})
-    if(!abooks){
-        return res.status(404).json({message: 'Book not Found'})
-     
+    const abooks = await books.find({ authorname: authorname })
+    if (!abooks || abooks.length === 0) { 
+        return res.status(404).json({ message: 'No books found for this author' })
     }
-    else{
+    else {
         res.json(abooks)
     }
 })

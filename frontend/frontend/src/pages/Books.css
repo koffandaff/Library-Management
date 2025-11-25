@@ -532,3 +532,65 @@
     height: 10rem;
   }
 }
+
+.status-badge.Available {
+  background-color: green;
+  color: white;
+}
+
+.status-badge.Unavailable {
+  background-color: red;
+  color: white;
+}
+
+.action-button.Available {
+  background-color: #4CAF50;
+}
+
+.action-button.Unavailable {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Add to Books.css */
+.clear-filters-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.clear-filters-btn:hover {
+  background: #5a6268;
+}
+
+.active-filters {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  background: #e9ecef;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.filter-tag button:hover {
+  color: #dc3545;
+}

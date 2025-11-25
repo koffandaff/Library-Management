@@ -17,7 +17,6 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Brand/Logo */}
         <div className="navbar-brand">
           <div className="brand-icon">
             <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -36,7 +35,6 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
           </a>
         </div>
         
-        {/* Main Navigation */}
         <nav className="navbar-nav">
           <a 
             href="#home" 
@@ -94,11 +92,9 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
           )}
         </nav>
         
-        {/* User Section */}
         <div className="navbar-profile">
           {isLoggedIn ? (
             <>
-              {/* Admin Dashboard Link - Only for admins */}
               {userRole === 'admin' && (
                 <a 
                   href="#admin-dashboard" 
@@ -108,12 +104,10 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="profile-link admin-link"
                 >
-                  <span className="material-symbols-outlined"></span>
                   <span>Dashboard</span>
                 </a>
               )}
               
-              {/* Add Book Link - Only for admins */}
               {userRole === 'admin' && (
                 <a 
                   href="#add-book" 
@@ -123,12 +117,10 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="profile-link"
                 >
-                  <span className="material-symbols-outlined"></span>
                   <span>Add Book</span>
                 </a>
               )}
               
-              {/* User Profile */}
               <a 
                 href="#profile" 
                 onClick={(e) => {
@@ -137,11 +129,9 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link"
               >
-                <span className="material-symbols-outlined"></span>
                 <span>Profile</span>
               </a>
               
-              {/* Logout */}
               <a 
                 href="#logout" 
                 onClick={(e) => {
@@ -150,12 +140,10 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link logout-btn"
               >
-                <span className="material-symbols-outlined"></span>
                 <span>Logout</span>
               </a>
             </>
           ) : (
-            /* Login/Register for non-logged in users */
             <>
               <a 
                 href="#login" 
@@ -165,7 +153,6 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link"
               >
-                <span className="material-symbols-outlined"></span>
                 <span>Login</span>
               </a>
               <a 
@@ -176,7 +163,6 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link register-btn"
               >
-                <span className="material-symbols-outlined"></span>
                 <span>Register</span>
               </a>
             </>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -15,100 +15,170 @@ import AdminDashboard from './pages/AdminDashboard';
 import PersonalCheckoutHistory from './pages/PersonalCheckoutHistory';
 import EditBook from './pages/EditBook';
 
-
-import api, { Api_Endpoints} from './service/api';
-
+import api, { Api_Endpoints } from './service/api';
 import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to true for testing
-  const [userRole, setUserRole] = useState('admin'); // Set to 'admin' or 'user' for testing
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState('user');
   const [pageParams, setPageParams] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  // Navigation function
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        const response = await api.get(Api_Endpoints.AUTH.CURRENT);
+        console.log('Auth check response:', response.data);
+        
+        let userRoleFromResponse = 'user';
+        
+        if (response.data.user && response.data.user.user && response.data.user.user.role) {
+          userRoleFromResponse = response.data.user.user.role;
+        } else if (response.data.user && response.data.user.role) {
+          userRoleFromResponse = response.data.user.role;
+        }
+        
+        setIsLoggedIn(true);
+        setUserRole(userRoleFromResponse);
+        
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('authToken');
+        setIsLoggedIn(false);
+        setUserRole('user');
+      }
+    }
+    setLoading(false);
+  };
+
   const navigateTo = (page, params = {}) => {
     console.log(`Navigating to: ${page}`, params);
+    
+    const publicPages = ['home', 'login', 'register'];
+    const adminPages = ['admin-dashboard', 'add-book', 'edit-book', 'checkout-history'];
+    
+    if (!publicPages.includes(page) && !isLoggedIn) {
+      setCurrentPage('login');
+      return;
+    }
+    
+    if (adminPages.includes(page) && userRole !== 'admin') {
+      setCurrentPage('home');
+      return;
+    }
+    
     setCurrentPage(page);
     setPageParams(params);
   };
 
-  // Mock login function - for testing without backend
   const handleLogin = async (email, password) => {
-    
-    console.log('HIIIIIIIIII')
     try {
-      console.log(email, password)
       const response = await api.post(Api_Endpoints.AUTH.LOGIN, {
         email,
         password
-      })
+      });
 
       const { accessToken, user } = response.data;
-      console.log(response, accessToken,user)
+      
       localStorage.setItem('authToken', accessToken);
       setIsLoggedIn(true);
-      setUserRole(user.role);
       
+      let userRoleFromResponse = 'user';
+      
+      if (user && user.user && user.user.role) {
+        userRoleFromResponse = user.user.role;
+      } else if (user && user.role) {
+        userRoleFromResponse = user.role;
+      } else if (typeof user === 'string') {
+        userRoleFromResponse = user.toLowerCase().includes('admin') ? 'admin' : 'user';
+      }
+      
+      setUserRole(userRoleFromResponse);
       setCurrentPage('home');
 
-    }
-    catch ( err){
-      console.log('Went to error')
-      console.log({Error: err.message})
-
+    } catch (err) {
+      console.log('Login failed:', err.response?.data || err.message);
+      alert('Login failed. Please check your credentials.');
     }
   };
 
-  // Mock register function
   const handleRegister = async (name, email, password, role, adminkey) => {
-    try{
-      console.log(role, adminkey)
-      console.log("Trying to Register")
+    try {
       const response = await api.post(Api_Endpoints.AUTH.REGISTER, {
         name,
         email,
         password,
         role,
         adminkey,
-      })
+      });
 
-      console.log({Data: response.data})
+      const { accessToken, user } = response.data;
+      localStorage.setItem('authToken', accessToken);
       setIsLoggedIn(true);
-      setUserRole(role);
+      
+      let userRoleFromResponse = role;
+      
+      if (user && user.user && user.user.role) {
+        userRoleFromResponse = user.user.role;
+      } else if (user && user.role) {
+        userRoleFromResponse = user.role;
+      }
+      
+      setUserRole(userRoleFromResponse);
       setCurrentPage('home');
-      console.log('User registered and logged in');
+      
+    } catch (err) {
+      console.log('Registration failed:', err);
+      alert('Registration failed. Please try again.');
     }
-    catch(err){
-      console.log(err)
-    }
-    
-    
   };
 
-  // Mock logout function
   const handleLogout = () => {
+    localStorage.removeItem('authToken');
     setIsLoggedIn(false);
     setUserRole('user');
     setCurrentPage('home');
-    console.log('User logged out');
   };
 
-  // Quick role switch for testing
-  const switchToAdmin = () => {
-    setUserRole('admin');
-    console.log('Switched to admin role');
-  };
-
-  const switchToUser = () => {
-    setUserRole('user');
-    console.log('Switched to user role');
-  };
-
-  // Render the current page
-  const renderCurrentPage = () => {
-    console.log('Rendering page:', currentPage);
+  const ProtectedRoute = ({ children, requireAdmin = false }) => {
+    if (!isLoggedIn) {
+      return (
+        <div className="protected-route">
+          <h2>Authentication Required</h2>
+          <p>Please log in to access this page.</p>
+          <button onClick={() => navigateTo('login')} className="login-redirect-btn">
+            Go to Login
+          </button>
+        </div>
+      );
+    }
     
+    if (requireAdmin && userRole !== 'admin') {
+      return (
+        <div className="protected-route">
+          <h2>Admin Access Required</h2>
+          <p>You need administrator privileges to access this page.</p>
+          <button onClick={() => navigateTo('home')} className="home-redirect-btn">
+            Go to Home
+          </button>
+        </div>
+      );
+    }
+    
+    return children;
+  };
+
+  const renderCurrentPage = () => {
+    if (loading) {
+      return <div className="loading">Loading...</div>;
+    }
+
     switch (currentPage) {
       case 'home':
         return <Home isLoggedIn={isLoggedIn} onNavigate={navigateTo} />;
@@ -117,25 +187,68 @@ function App() {
       case 'register':
         return <Register onRegister={handleRegister} onNavigate={navigateTo} />;
       case 'books':
-        return <Books onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute>
+            <Books onNavigate={navigateTo} isLoggedIn={isLoggedIn} userRole={userRole} />
+          </ProtectedRoute>
+        );
       case 'authors':
-        return <Authors onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute>
+            <Authors onNavigate={navigateTo} />
+          </ProtectedRoute>
+        );
       case 'author-details':
-        return <AuthorDetails onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute>
+            <AuthorDetails onNavigate={navigateTo} />
+          </ProtectedRoute>
+        );
       case 'book-details':
-        return <BookDetails onNavigate={navigateTo} />;
-      case 'add-book':
-        return <AddBook onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute>
+            <BookDetails 
+            onNavigate={navigateTo}
+            isAdmin={userRole === 'admin'}
+            bookId={pageParams.bookId} />
+          </ProtectedRoute>
+        );
       case 'profile':
-        return <Profile onNavigate={navigateTo} isLoggedIn={isLoggedIn} userRole={userRole} />;
-      case 'checkout-history':
-        return <CheckoutHistory onNavigate={navigateTo} userRole={userRole} />;
-      case 'admin-dashboard':
-        return <AdminDashboard onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute>
+            <Profile onNavigate={navigateTo} isLoggedIn={isLoggedIn} userRole={userRole} />
+          </ProtectedRoute>
+        );
       case 'personal-checkout-history':
-        return <PersonalCheckoutHistory onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute>
+            <PersonalCheckoutHistory onNavigate={navigateTo} />
+          </ProtectedRoute>
+        );
+      case 'add-book':
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <AddBook onNavigate={navigateTo} />
+          </ProtectedRoute>
+        );
       case 'edit-book':
-        return <EditBook onNavigate={navigateTo} />;
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <EditBook onNavigate={navigateTo} />
+          </ProtectedRoute>
+        );
+      case 'checkout-history':
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <CheckoutHistory onNavigate={navigateTo} userRole={userRole} />
+          </ProtectedRoute>
+        );
+      case 'admin-dashboard':
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <AdminDashboard onNavigate={navigateTo} />
+          </ProtectedRoute>
+        );
       default:
         return <Home isLoggedIn={isLoggedIn} onNavigate={navigateTo} />;
     }
@@ -143,27 +256,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* Quick Testing Controls - Remove in production */}
-      <div className="testing-controls">
-        <div className="testing-buttons">
-          <button onClick={switchToAdmin} className="test-btn admin-btn">
-            Switch to Admin
-          </button>
-          <button onClick={switchToUser} className="test-btn user-btn">
-            Switch to User
-          </button>
-          <button onClick={handleLogout} className="test-btn logout-btn">
-            Logout
-          </button>
-          <button onClick={handleLogin} className="test-btn login-btn">
-            Login
-          </button>
-          <span className="status-indicator">
-            Status: {isLoggedIn ? 'Logged In' : 'Logged Out'} | Role: {userRole}
-          </span>
-        </div>
-      </div>
-
       <Navbar 
         isLoggedIn={isLoggedIn} 
         userRole={userRole}

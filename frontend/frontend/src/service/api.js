@@ -42,6 +42,9 @@ export const Api_Endpoints = {
         LOGIN: '/users/login',
         REGISTER: '/users/register',
         CURRENT: '/users/current'
+    },
+    BOOKS: {
+        GET_ALLBOOKS: '/book'
     }
 }
 
