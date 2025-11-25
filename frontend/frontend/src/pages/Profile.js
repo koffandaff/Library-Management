@@ -1,85 +1,78 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import api , { Api_Endpoints} from '../service/api';
 import './Profile.css';
 
-const Profile = ({ onNavigate, isLoggedIn, userRole = 'admin' }) => {
-  const user = {
-    name: "Alex Doe",
-    email: "alex.doe@library.com",
-    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDZL9DQMHw5qHHnNj_jqq0sLZlhP3AdPaAi69K9lfTpVXJqFYPwdb6OfMIWKffhXAqyIcFlTAKGBSCkJslTrlDcXkyyg_GKdwd5KXbmXsK0ZjYcejxDqahkDwGreuXQKyIXMfETSk4fMwfiBBlxvXCU6fWeVBnSHg7uPca6PwIJ1hS637in_B3gukyRm-oGnImSRQqxdbn0iS4oasxSiJbCsTsHi5C8Ohs37PbLk4J0PI08arKksH0hLy_5HrCRaqh_xElbqH8yOTE",
-    booksCheckedOut: 7,
-    role: userRole
-  };
+const Profile = ({ onNavigate, isLoggedIn, userRole }) => {
+  const [userData, setUserData] = useState(null);
+  const [userStats, setUserStats] = useState({ booksCheckedOut: 0 });
+  const [loading, setLoading] = useState(true);
+  
 
-  const handleAdminDashboard = () => {
-    if (onNavigate) {
-      onNavigate('admin-dashboard');
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUserData();
+      
+    }
+  }, [isLoggedIn]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get(Api_Endpoints.AUTH.CURRENT);
+      setLoading(false)
+      console.log(response.data)
+      console.log(response.data.user.user)
+      // setUserData(response.data.user.user.name);
+      const userDatag = response.data.user.user
+      console.log("Userdataggggggggg", userDatag)
+      console.log(userDatag.name)
+      
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
     }
   };
 
-  const handleLogout = () => {
-    if (onNavigate) {
-      onNavigate('home');
+  const fetchUserStats = async () => {
+    try {
+      const response = await api.get();
+      const activeCheckouts = response.data.filter(checkout => checkout.status === 'active').length;
+      setUserStats({ booksCheckedOut: activeCheckouts });
+    } catch (error) {
+      console.error('Failed to fetch user stats:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   if (!isLoggedIn) {
     return (
-      <div className="profile-container">
-        <div className="not-logged-in">
-          <h2>Please log in to view your profile</h2>
-          <button onClick={() => onNavigate('login')} className="login-btn">
-            Go to Login
-          </button>
-        </div>
+      <div className="not-logged-in">
+        <h2>Please log in to view your profile</h2>
+        <button onClick={() => onNavigate('login')}>Go to Login</button>
       </div>
     );
   }
 
+  console.log("KIKIKIK", userDatag)
+
+  if (loading) return <div>Loading profile...</div>;
+
   return (
     <div className="profile-container">
-      <div className="profile-content">
-        <div className="profile-header">
-          <h1>Your Profile</h1>
+      <div className="profile-card">
+        <div className="user-info">
+          <h2>{userDatag.name}</h2>
+          <p>{userDatag.email}</p>
         </div>
-
-        <div className="profile-card">
-          <div className="profile-info">
-            <div className="avatar-section">
-              <div 
-                className="user-avatar"
-                style={{ backgroundImage: `url(${user.avatar})` }}
-              ></div>
-              <div className="user-details">
-                <h2 className="user-name">{user.name}</h2>
-                <p className="user-email">{user.email}</p>
-              </div>
-            </div>
-
-            <div className="stats-section">
-              <div className="stat-card">
-                <span className="stat-number">{user.booksCheckedOut}</span>
-                <span className="stat-label">Books Checked Out</span>
-              </div>
-              
-              <div className="stat-card">
-                <span className={`role-badge ${user.role}`}>
-                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                </span>
-                <span className="stat-label">Role</span>
-              </div>
-            </div>
-
-            <div className="actions-section">
-              {user.role === 'admin' && (
-                <button className="admin-dashboard-btn" onClick={handleAdminDashboard}>
-                  Admin Dashboard
-                </button>
-              )}
-              
-              <button className="logout-btn" onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
+        <div className="stats">
+          <div className="stat">
+            <span className="stat-number">{userStats.booksCheckedOut}</span>
+            <span className="stat-label">Books Checked Out</span>
+          </div>
+          <div className="stat">
+            <span className={`role-badge ${userRole}`}>
+              {userDatag.role}
+            </span>
+            <span className="stat-label">Role</span>
           </div>
         </div>
       </div>

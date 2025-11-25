@@ -44,9 +44,14 @@ function App() {
         password
       })
 
-      console.log(response.data)
+      const { accessToken, user } = response.data;
+      console.log(response, accessToken,user)
+      localStorage.setItem('authToken', accessToken);
       setIsLoggedIn(true);
-      setCurrentPage('home')
+      setUserRole(user.role);
+      
+      setCurrentPage('home');
+
     }
     catch ( err){
       console.log('Went to error')
