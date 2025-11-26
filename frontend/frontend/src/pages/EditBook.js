@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import api, { Api_Endpoints } from '../service/api';
 import './EditBook.css';
 
-const EditBook = ({ onNavigate, bookId }) => {
+const EditBook = ({ onNavigate , bookId}) => {
   const [formData, setFormData] = useState({
-    name: "",
-    authorname: "",
+    title: "",
+    author: "",
     category: "",
-    bookid: "",
-    copies: "",
-    status: "Available",
-    description: ""
+    description: "",
+    copies: ""
+
   });
-  const [loading, setLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -24,15 +23,18 @@ const EditBook = ({ onNavigate, bookId }) => {
 
   const fetchBookData = async () => {
     try {
+      console.log("sadfnsdfnsdf", "Id:   ",bookId)
       setLoading(true);
-      const response = await api.get(`${Api_Endpoints.BOOKS.GET_BOOK_BY_ID}/${bookId}`);
-      const book = response.data;
-      
+      const response = await api.get(`${Api_Endpoints.BOOKS.GET_BOOK_DETAILS}/${bookId}`);
+      console.log(response.data)
+      console.log(response.data.Book)
+      const book = response.data.Book
+      console.log('Book: ', book)
       setFormData({
         name: book.name || "",
         authorname: book.authorname || "",
         category: book.category || "",
-        bookid: book.bookid || "",
+        bookId: book.bookid || "",
         copies: book.copies?.toString() || "",
         status: book.status || "Available",
         description: book.description || ""
@@ -55,26 +57,26 @@ const EditBook = ({ onNavigate, bookId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // Convert copies to number
-      const updateData = {
-        ...formData,
-        copies: parseInt(formData.copies)
-      };
-
-      await api.put(`${Api_Endpoints.BOOKS.UPDATE_BOOK}/${bookId}`, updateData);
+    console.log('Updating book:', formData);
+    const response = await api.put(`${Api_Endpoints.BOOKS.UPDATE_BOOK}/${bookId}`, {
+      name: formData.name,
+      authorname: formData.name,
+      bookid: formData.bookId,
+      description: formData.description,
+      category: formData.category,
+      copies: formData.copies,
+      status: formData.status
       
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        if (onNavigate) {
-          onNavigate('book-details', { bookId });
-        }
-      }, 2000);
-    } catch (err) {
-      console.error('Error updating book:', err);
-      alert('Failed to update book');
-    }
+
+    })
+    console.log(response)
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      if (onNavigate) {
+        onNavigate('books');
+      }
+    }, 2000);
   };
 
   const handleCancel = () => {
@@ -159,7 +161,7 @@ const EditBook = ({ onNavigate, bookId }) => {
                 id="bookid"
                 name="bookid"
                 type="text"
-                value={formData.bookid}
+                value={formData.bookId}
                 onChange={handleInputChange}
                 required
               />

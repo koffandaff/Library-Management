@@ -6,10 +6,10 @@ const asychandler = require('express-async-handler')
 
 // Create a New Book
 //@desc Create a Book
-//@route POST /api/book/
+//@route POST /api/book/ 
 //@access private
 const createBook = asychandler( async (req,res) => {
-    const {name,  bookid, authorid, authorname,  category, copies, status} = req.body;
+    const {name,  bookid, authorid, authorname,  category, copies, status, description} = req.body;
     if(!name ||  !authorname || !category || !bookid || !copies){
         return res.status(400).json({message: 'Please provide all required fields: name , bookid , (authorid or authorname) , category , copies '})
     }
@@ -37,11 +37,13 @@ const createBook = asychandler( async (req,res) => {
                 newAuthor
             )
         }
+        
         const newBook = {
             
             name,
             authorname: authorname,
             bookid,
+            description: description || 'NA',
             category,
             copies,
             status: status || 'Available'
@@ -71,7 +73,7 @@ const getAllBooks = asychandler ( async (req,res) => {
 //@desc Get a Book By name
 //@route GET /api/book/:name
 //@access public
-const getBookById = asychandler( async (req,res) => {
+const getBookByname = asychandler( async (req,res) => {
     try {
             const book = await books.findOne({name : req.params.name}) // check if the book exists with that name 
     if(!book){
@@ -87,6 +89,18 @@ const getBookById = asychandler( async (req,res) => {
 
 })
 
+// Get a Book by id
+//@desc Get a Book By id
+//@route GET /api/book/id/:id
+//@access public
+const getBookById = asychandler ( async (req,res) => {
+    const book = await books.findById(req.params.id)
+    if(!book){
+        return res.status(404).json({Error: "Book Not Fond"})
+    }
+    return res.status(200).json({Book: book})
+})
+
 
 // LUpdate a Book
 //@desc Update a Book
@@ -99,13 +113,14 @@ const updateBook = asychandler( async (req,res) => {
      
     }
 
-    const {name, authorid,  category, copies, status} = req.body; // find all the given const 
+    const {name, authorid,  category, description, copies, status} = req.body; // find all the given const 
     // Update whatever is given 
     if(name) book.name = name;
     if(authorid) {
         book.authorname = await authors.findById(req.params.authorid) || book.authorname
     }
     if(category) book.category = category;
+    if(description) book.description = description;
     if(copies) book.copies = copies;
     if(status) book.status = status;
     await book.save(); // save the updated data 
@@ -165,4 +180,4 @@ const getBookByAuthor = asychandler(async (req, res) => {
 })
 
 // module.exports = { getBookByCategory}
-module.exports = { createBook, getAllBooks, getBookById, updateBook, deleteBook, getBookByCategory, getBookByAuthor}
+module.exports = { createBook, getAllBooks, getBookByname, getBookById, updateBook, deleteBook, getBookByCategory, getBookByAuthor}

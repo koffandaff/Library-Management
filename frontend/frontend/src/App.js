@@ -44,7 +44,7 @@ function App() {
           userRoleFromResponse = response.data.user.role;
         }
         
-        setIsLoggedIn(true);
+        setIsLoggedIn(true); 
         setUserRole(userRoleFromResponse);
         
       } catch (error) {
@@ -234,7 +234,9 @@ function App() {
       case 'edit-book':
         return (
           <ProtectedRoute requireAdmin={true}>
-            <EditBook onNavigate={navigateTo} />
+            <EditBook onNavigate={navigateTo}
+            bookId={pageParams.bookId} />
+
           </ProtectedRoute>
         );
       case 'checkout-history':

@@ -41,10 +41,12 @@ export const Api_Endpoints = {
     AUTH: {
         LOGIN: '/users/login',
         REGISTER: '/users/register',
-        CURRENT: '/users/current'
+        CURRENT: '/users/current' 
     },
     BOOKS: {
-        GET_ALLBOOKS: '/book'
+        GET_ALLBOOKS: '/book',
+        GET_BOOK_DETAILS: '/book/id',
+        UPDATE_BOOK: '/book'
     }
 }
 

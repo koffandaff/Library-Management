@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-import api from '../service/api';
+import api, { Api_Endpoints } from '../service/api';
 import './BookDetails.css';
 
-const BookDetails = ({ onNavigate, isAdmin = false }) => {
+const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   
-  const bookId = 0;
+   
 
   useEffect(() => {
     if (bookId) {
@@ -20,9 +20,10 @@ const BookDetails = ({ onNavigate, isAdmin = false }) => {
   const fetchBookDetails = async () => {
     try {
       setLoading(true);
-      // Use your existing getBookById endpoint
-      const response = await api.get(`/book/${bookId}`);
-      setBook(response.data);
+      console.log("BookId is:: ", bookId)
+      const response = await api.get(`${Api_Endpoints.BOOKS.GET_BOOK_DETAILS}/${bookId}`);
+      console.log(response.data, "Bookdata: ", response.data.Book)
+      setBook(response.data.Book);
     } catch (err) {
       setError('Failed to fetch book details');
       console.error('Error fetching book:', err);
@@ -39,10 +40,10 @@ const BookDetails = ({ onNavigate, isAdmin = false }) => {
 
   const handleCheckout = async () => {
     try {
-      // You'll need to create this checkout endpoint
+      
       await api.post('/checkout', { bookId: book._id });
       alert('Book checked out successfully!');
-      // Refresh book details to update availability
+     
       fetchBookDetails();
     } catch (err) {
       console.error('Error checking out book:', err);
@@ -140,6 +141,11 @@ const BookDetails = ({ onNavigate, isAdmin = false }) => {
                   <span className="detail-label">Book ID</span>
                   <span className="detail-value">{book.bookid}</span>
                 </div>
+                
+                <p className='book-descrption'>
+                  <span className="detail-label">Description</span><br></br>
+                  <span className="detail-value">{book.description || 'NA'}</span>
+                </p>
                 <div className="detail-item">
                   <span className="detail-label">Copies Available</span>
                   <span className="detail-value">{book.copies}</span>
