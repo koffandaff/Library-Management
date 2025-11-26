@@ -1,69 +1,70 @@
 .edit-book-container {
   min-height: 100vh;
-  background-color: #f6f7f8;
-  font-family: 'Inter', sans-serif;
-  padding: 1.5rem;
+  background: #f8fafc;
+  padding: 2rem;
 }
 
 .edit-book-content {
-  max-width: 64rem;
+  max-width: 800px;
   margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
+/* Breadcrumbs */
 .breadcrumbs {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 
 .breadcrumb-link {
   background: none;
   border: none;
-  color: #6c757d;
+  color: #2563eb;
   cursor: pointer;
-  font-weight: 500;
-  transition: color 0.2s ease;
+  padding: 0;
 }
 
 .breadcrumb-link:hover {
-  color: #137fec;
+  text-decoration: underline;
 }
 
 .breadcrumb-separator {
-  color: #6c757d;
+  color: #6b7280;
 }
 
 .breadcrumb-current {
-  color: #0d141b;
+  color: #374151;
   font-weight: 500;
 }
 
+/* Page Header */
 .page-header {
   margin-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
 }
 
 .page-header h1 {
-  font-size: 2.25rem;
-  font-weight: 900;
-  color: #0d141b;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
   margin: 0 0 0.5rem 0;
 }
 
 .page-header p {
-  font-size: 1rem;
-  color: #6c757d;
+  color: #6b7280;
   margin: 0;
 }
 
+/* Form */
 .edit-book-form {
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(1rem);
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .form-grid {
@@ -84,138 +85,128 @@
 }
 
 .form-group label {
-  font-size: 0.875rem;
   font-weight: 500;
-  color: #0d141b;
+  color: #374151;
+  font-size: 0.875rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  background-color: rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #137fec;
-  background-color: white;
-  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2);
-}
-
-.form-group select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.5rem center;
-  background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
-  padding-right: 2.5rem;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 8rem;
+  min-height: 120px;
   font-family: inherit;
 }
 
+/* Form Actions */
 .form-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 1rem;
+  justify-content: flex-end;
   padding-top: 1.5rem;
   border-top: 1px solid #e5e7eb;
 }
 
 .cancel-btn {
   padding: 0.75rem 1.5rem;
-  background-color: rgba(241, 245, 249, 0.8);
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  color: #0d141b;
-  font-size: 0.875rem;
-  font-weight: 700;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .cancel-btn:hover {
-  background-color: #e5e7eb;
+  background: #f9fafb;
 }
 
 .update-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: #137fec;
   border: none;
-  border-radius: 0.5rem;
+  background: #2563eb;
   color: white;
-  font-size: 0.875rem;
-  font-weight: 700;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  font-weight: 500;
 }
 
 .update-btn:hover {
-  background-color: #106bc7;
+  background: #1d4ed8;
 }
 
+/* Success Toast */
 .success-toast {
   position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
+  top: 2rem;
+  right: 2rem;
+  background: #10b981;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background-color: rgba(16, 185, 129, 0.95);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  border-radius: 0.75rem;
-  padding: 1rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(0.5rem);
-  max-width: 24rem;
-  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
 }
 
 .toast-icon {
-  color: white;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
 .toast-content h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: white;
   margin: 0 0 0.25rem 0;
+  font-size: 1rem;
 }
 
 .toast-content p {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.9);
   margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.9;
 }
 
-.toast-close {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 0.25rem;
-  transition: all 0.2s ease;
-  margin-left: auto;
+/* Loading and Error */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
 }
 
-.toast-close:hover {
+.error-container {
+  text-align: center;
+  padding: 3rem;
+}
+
+.error-container h3 {
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+
+.back-btn {
+  background: #2563eb;
   color: white;
-  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 @keyframes slideIn {
@@ -229,54 +220,13 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .edit-book-container {
-    background-color: #101922;
-  }
-  
-  .breadcrumb-current {
-    color: white;
-  }
-  
-  .page-header h1 {
-    color: white;
-  }
-  
-  .edit-book-form {
-    background-color: rgba(30, 41, 59, 0.6);
-    border-color: #374151;
-  }
-  
-  .form-group label {
-    color: white;
-  }
-  
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    background-color: rgba(55, 65, 81, 0.8);
-    border-color: #4b5563;
-    color: white;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    background-color: #374151;
+/* Responsive */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
   }
   
   .form-actions {
-    border-top-color: #374151;
-  }
-  
-  .cancel-btn {
-    background-color: rgba(55, 65, 81, 0.8);
-    border-color: #4b5563;
-    color: #e5e7eb;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #4b5563;
+    flex-direction: column;
   }
 }
