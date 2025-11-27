@@ -63,13 +63,34 @@ const Books = ({ onNavigate, isLoggedIn, userRole }) => {
     }
   };
 
-  const handleCheckout = (bookId, e) => {
+  const handleCheckout = async (bookId, e) => {
     e.stopPropagation();
     if (!isLoggedIn) {
       if (onNavigate) onNavigate('login');
       return;
     }
-    console.log('Checkout book:', bookId);
+
+    try {
+      // Find the book to check its availability
+      const book = books.find(b => b._id === bookId);
+      if (!book || book.copies < 1) {
+        alert('No copies available for checkout');
+        return;
+      }
+
+      // Use bookid (like 1001) for checkout, not MongoDB _id
+      await api.post(`${Api_Endpoints.CHECKOUT.CHECKOUT_BOOK}/${book.bookid}`, {
+        copies: 1
+      });
+      
+      alert('Book checked out successfully!');
+      // Refresh the books list to update availability
+      fetchbooks();
+    } catch (err) {
+      console.error('Error checking out book:', err);
+      const errorMessage = err.response?.data?.message || 'Failed to checkout book';
+      alert(errorMessage);
+    }
   };
 
   const handleAddBook = () => {
@@ -95,7 +116,7 @@ const Books = ({ onNavigate, isLoggedIn, userRole }) => {
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
-        await api.delete(`/book/${bookId}`);
+        await api.delete(`${Api_Endpoints.BOOKS.DELETE_BOOK}/${bookId}`);
         setBooks(books.filter(book => book._id !== bookId));
         alert('Book deleted successfully');
       } catch (err) {
@@ -264,17 +285,17 @@ const Books = ({ onNavigate, isLoggedIn, userRole }) => {
 
                   <div className="book-meta">
                     <span className="book-category">{book.category}</span>
-                    <div className={`status-badge ${book.status}`}>
-                      {book.status === 'Available' ? 'Available' : 'Unavailable'}
+                    <div className={`status-badge ${book.copies > 0 ? 'available' : 'unavailable'}`}>
+                      {book.copies > 0 ? `${book.copies} Available` : 'Out of Stock'}
                     </div>
                   </div>
 
                   <button
-                    className={`action-button ${book.status}`}
+                    className={`action-button ${book.copies > 0 ? 'available' : 'unavailable'}`}
                     onClick={(e) => handleCheckout(book._id, e)}
-                    disabled={book.status !== 'Available' || !isLoggedIn}
+                    disabled={book.copies === 0 || !isLoggedIn}
                   >
-                    {book.status === 'Available' ? 'Checkout' : 'Unavailable'}
+                    {book.copies > 0 ? 'Checkout' : 'Unavailable'}
                   </button>
                 </div>
               </div>

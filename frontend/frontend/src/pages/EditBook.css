@@ -1,16 +1,60 @@
 .edit-book-container {
+  position: relative;
   min-height: 100vh;
-  background: #f8fafc;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f7f8;
+  font-family: 'Inter', sans-serif;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.edit-book-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(19, 127, 236, 0.2);
+  filter: blur(3rem);
+}
+
+.bg-blob-1 {
+  width: 24rem;
+  height: 24rem;
+  top: -5rem;
+  left: -5rem;
+}
+
+.bg-blob-2 {
+  width: 24rem;
+  height: 24rem;
+  bottom: -5rem;
+  right: -5rem;
+}
+
+.edit-book-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 48rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  background: rgba(255, 255, 255, 0.3);
   padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(1rem);
 }
 
 .edit-book-content {
-  max-width: 800px;
-  margin: 0 auto;
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* Breadcrumbs */
@@ -18,16 +62,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
 }
 
 .breadcrumb-link {
   background: none;
   border: none;
-  color: #2563eb;
+  color: #137fec;
   cursor: pointer;
   padding: 0;
+  font-size: 0.875rem;
 }
 
 .breadcrumb-link:hover {
@@ -35,7 +80,7 @@
 }
 
 .breadcrumb-separator {
-  color: #6b7280;
+  color: #64748b;
 }
 
 .breadcrumb-current {
@@ -45,33 +90,42 @@
 
 /* Page Header */
 .page-header {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .page-header h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #1e293b;
+  text-align: center;
+  margin: 0;
 }
 
 .page-header p {
-  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #64748b;
+  text-align: center;
   margin: 0;
 }
 
 /* Form */
 .edit-book-form {
+  display: flex;
   width: 100%;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
 .form-group {
@@ -85,33 +139,50 @@
 }
 
 .form-group label {
+  font-size: 0.875rem;
   font-weight: 500;
   color: #374151;
-  font-size: 0.875rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  flex: 1;
+  height: 3rem;
+  width: 100%;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0 1rem;
   font-size: 1rem;
-  transition: border-color 0.2s;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1f2937;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(0.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.form-group textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 1rem;
+  resize: vertical;
+  font-family: inherit;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2);
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-  font-family: inherit;
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #6b7280;
 }
 
 /* Form Actions */
@@ -119,36 +190,42 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .cancel-btn {
-  padding: 0.75rem 1.5rem;
-  border: 1px solid #d1d5db;
-  background: white;
+  height: 3rem;
+  padding: 0 1.5rem;
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  background: rgba(255, 255, 255, 0.2);
   color: #374151;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   cursor: pointer;
   font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
 .cancel-btn:hover {
-  background: #f9fafb;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .update-btn {
-  padding: 0.75rem 1.5rem;
+  height: 3rem;
+  padding: 0 1.5rem;
   border: none;
-  background: #2563eb;
+  background-color: #137fec;
   color: white;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
 }
 
 .update-btn:hover {
-  background: #1d4ed8;
+  background-color: #106bc7;
 }
 
 /* Success Toast */
@@ -158,13 +235,16 @@
   right: 2rem;
   background: #10b981;
   color: white;
-  padding: 1rem;
-  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   animation: slideIn 0.3s ease-out;
+  z-index: 1000;
 }
 
 .toast-icon {
@@ -175,6 +255,7 @@
 .toast-content h4 {
   margin: 0 0 0.25rem 0;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .toast-content p {
@@ -188,6 +269,7 @@
   text-align: center;
   padding: 3rem;
   font-size: 1.2rem;
+  color: #64748b;
 }
 
 .error-container {
@@ -201,12 +283,18 @@
 }
 
 .back-btn {
-  background: #2563eb;
+  height: 3rem;
+  padding: 0 1.5rem;
+  background: #137fec;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   cursor: pointer;
+  font-weight: 600;
+}
+
+.back-btn:hover {
+  background: #106bc7;
 }
 
 @keyframes slideIn {
@@ -228,5 +316,71 @@
   
   .form-actions {
     flex-direction: column;
+  }
+  
+  .edit-book-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .edit-book-container {
+    background-color: #101922;
+  }
+  
+  .edit-book-card {
+    background: rgba(16, 25, 34, 0.3);
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+  
+  .page-header h1 {
+    color: white;
+  }
+  
+  .page-header p {
+    color: #9ca3af;
+  }
+  
+  .form-group label {
+    color: #e5e7eb;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    color: white;
+    background-color: rgba(30, 41, 59, 0.2);
+    border-color: rgba(51, 65, 85, 0.3);
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    background-color: rgba(30, 41, 59, 0.4);
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+  
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #9ca3af;
+  }
+  
+  .breadcrumb-link {
+    color: #60a5fa;
+  }
+  
+  .breadcrumb-current {
+    color: #e5e7eb;
+  }
+  
+  .cancel-btn {
+    background: rgba(30, 41, 59, 0.2);
+    color: #e5e7eb;
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+  
+  .cancel-btn:hover {
+    background: rgba(30, 41, 59, 0.4);
   }
 }

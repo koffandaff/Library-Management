@@ -6,7 +6,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Books from './pages/Books';
 import Authors from './pages/Authors';
+import AddAuthor from './pages/AddAuthor';
 import AuthorDetails from './pages/AuthorDetails';
+import AuthorUpdate from './pages/AuthorUpdate';
+import AuthorDelete from './pages/AuthorDelete';
 import BookDetails from './pages/BookDetails';
 import AddBook from './pages/AddBook';
 import Profile from './pages/Profile';
@@ -29,6 +32,7 @@ function App() {
     checkAuthStatus();
   }, []);
 
+  // Check authentication status on app load
   const checkAuthStatus = async () => {
     const token = localStorage.getItem('authToken');
     if (token) {
@@ -49,27 +53,34 @@ function App() {
         
       } catch (error) {
         console.error('Auth check failed:', error);
-        localStorage.removeItem('authToken');
-        setIsLoggedIn(false);
-        setUserRole('user');
+        // Clear token only if it's not a 401 (token refresh will handle 401)
+        if (error.response?.status !== 401) {
+          localStorage.removeItem('authToken');
+          setIsLoggedIn(false);
+          setUserRole('user');
+        }
       }
     }
     setLoading(false);
   };
 
+  // Navigation function with access control
   const navigateTo = (page, params = {}) => {
     console.log(`Navigating to: ${page}`, params);
     
     const publicPages = ['home', 'login', 'register'];
-    const adminPages = ['admin-dashboard', 'add-book', 'edit-book', 'checkout-history'];
+    const adminPages = ['admin-dashboard', 'add-book', 'edit-book', 'checkout-history', 'author-update', 'author-delete', 'add-author'];
     
+    // Redirect to login if trying to access protected page without authentication
     if (!publicPages.includes(page) && !isLoggedIn) {
       setCurrentPage('login');
       return;
     }
     
+    // Redirect to home if non-admin tries to access admin pages
     if (adminPages.includes(page) && userRole !== 'admin') {
       setCurrentPage('home');
+      alert('Access denied. Admin privileges required.');
       return;
     }
     
@@ -77,6 +88,7 @@ function App() {
     setPageParams(params);
   };
 
+  // Handle user login
   const handleLogin = async (email, password) => {
     try {
       const response = await api.post(Api_Endpoints.AUTH.LOGIN, {
@@ -86,11 +98,12 @@ function App() {
 
       const { accessToken, user } = response.data;
       
+      // Store access token and update auth state
       localStorage.setItem('authToken', accessToken);
       setIsLoggedIn(true);
       
+      // Extract user role from response
       let userRoleFromResponse = 'user';
-      
       if (user && user.user && user.user.role) {
         userRoleFromResponse = user.user.role;
       } else if (user && user.role) {
@@ -101,13 +114,17 @@ function App() {
       
       setUserRole(userRoleFromResponse);
       setCurrentPage('home');
+      
+      console.log('Login successful, role:', userRoleFromResponse);
 
     } catch (err) {
       console.log('Login failed:', err.response?.data || err.message);
-      alert('Login failed. Please check your credentials.');
+      const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      alert(errorMessage);
     }
   };
 
+  // Handle user registration
   const handleRegister = async (name, email, password, role, adminkey) => {
     try {
       const response = await api.post(Api_Endpoints.AUTH.REGISTER, {
@@ -118,34 +135,44 @@ function App() {
         adminkey,
       });
 
-      const { accessToken, user } = response.data;
-      localStorage.setItem('authToken', accessToken);
-      setIsLoggedIn(true);
+      // SUCCESS: Show message and redirect to login instead of auto-login
+      alert('Registration successful! Please log in with your credentials.');
+      setCurrentPage('login'); // Redirect to login page
       
-      let userRoleFromResponse = role;
-      
-      if (user && user.user && user.user.role) {
-        userRoleFromResponse = user.user.role;
-      } else if (user && user.role) {
-        userRoleFromResponse = user.role;
-      }
-      
-      setUserRole(userRoleFromResponse);
-      setCurrentPage('home');
-      
+      console.log('Registration successful, please log in');
+
     } catch (err) {
-      console.log('Registration failed:', err);
-      alert('Registration failed. Please try again.');
+      console.log('Registration failed:', err.response?.data || err.message);
+      const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+      alert(errorMessage);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    setIsLoggedIn(false);
-    setUserRole('user');
-    setCurrentPage('home');
+  // Handle user logout with CORS error handling
+  const handleLogout = async () => {
+    try {
+      // Try to call logout endpoint to clear server-side refresh token
+      // Use timeout to prevent hanging on CORS issues
+      await api.post(Api_Endpoints.AUTH.LOGOUT, {}, { 
+        withCredentials: true,
+        timeout: 3000 // 3 second timeout
+      });
+      console.log('Logout API call successful');
+    } catch (err) {
+      console.log('Logout API call had issues (but continuing):', err.message);
+      // Continue with client-side logout even if API call fails
+    } finally {
+      // Always clear client-side tokens regardless of server response
+      localStorage.removeItem('authToken');
+      setIsLoggedIn(false);
+      setUserRole('user');
+      setCurrentPage('home');
+      
+      console.log('User logged out successfully (client-side)');
+    }
   };
 
+  // Protected route component for access control
   const ProtectedRoute = ({ children, requireAdmin = false }) => {
     if (!isLoggedIn) {
       return (
@@ -174,6 +201,7 @@ function App() {
     return children;
   };
 
+  // Render the current page based on state
   const renderCurrentPage = () => {
     if (loading) {
       return <div className="loading">Loading...</div>;
@@ -195,22 +223,51 @@ function App() {
       case 'authors':
         return (
           <ProtectedRoute>
-            <Authors onNavigate={navigateTo} />
+            <Authors onNavigate={navigateTo} isAdmin={userRole === 'admin'} />
+          </ProtectedRoute>
+        );
+      case 'add-author':
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <AddAuthor onNavigate={navigateTo} />
           </ProtectedRoute>
         );
       case 'author-details':
         return (
           <ProtectedRoute>
-            <AuthorDetails onNavigate={navigateTo} />
+            <AuthorDetails 
+              onNavigate={navigateTo} 
+              isAdmin={userRole === 'admin'}
+              authorId={pageParams.authorId}
+            />
+          </ProtectedRoute>
+        );
+      case 'author-update':
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <AuthorUpdate 
+              onNavigate={navigateTo}
+              authorId={pageParams.authorId}
+            />
+          </ProtectedRoute>
+        );
+      case 'author-delete':
+        return (
+          <ProtectedRoute requireAdmin={true}>
+            <AuthorDelete 
+              onNavigate={navigateTo}
+              authorId={pageParams.authorId}
+            />
           </ProtectedRoute>
         );
       case 'book-details':
         return (
           <ProtectedRoute>
             <BookDetails 
-            onNavigate={navigateTo}
-            isAdmin={userRole === 'admin'}
-            bookId={pageParams.bookId} />
+              onNavigate={navigateTo}
+              isAdmin={userRole === 'admin'}
+              bookId={pageParams.bookId} 
+            />
           </ProtectedRoute>
         );
       case 'profile':
@@ -234,9 +291,10 @@ function App() {
       case 'edit-book':
         return (
           <ProtectedRoute requireAdmin={true}>
-            <EditBook onNavigate={navigateTo}
-            bookId={pageParams.bookId} />
-
+            <EditBook 
+              onNavigate={navigateTo}
+              bookId={pageParams.bookId} 
+            />
           </ProtectedRoute>
         );
       case 'checkout-history':

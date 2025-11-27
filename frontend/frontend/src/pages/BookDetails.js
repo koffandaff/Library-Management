@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
 import api, { Api_Endpoints } from '../service/api';
 import './BookDetails.css';
 
-const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
+const BookDetails = ({ onNavigate, isAdmin = false, bookId }) => {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  
-   
 
   useEffect(() => {
     if (bookId) {
@@ -20,10 +16,11 @@ const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
   const fetchBookDetails = async () => {
     try {
       setLoading(true);
-      console.log("BookId is:: ", bookId)
+      console.log("BookId is:: ", bookId);
       const response = await api.get(`${Api_Endpoints.BOOKS.GET_BOOK_DETAILS}/${bookId}`);
-      console.log(response.data, "Bookdata: ", response.data.Book)
-      setBook(response.data.Book);
+      console.log("Book details response:", response.data);
+      setBook(response.data);
+      setBook(response.data.Book)
     } catch (err) {
       setError('Failed to fetch book details');
       console.error('Error fetching book:', err);
@@ -40,19 +37,27 @@ const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
 
   const handleCheckout = async () => {
     try {
+      if (!book || book.copies < 1) {
+        alert('No copies available for checkout');
+        return;
+      }
+
+      // Use bookid (like 1001) for checkout, not MongoDB _id
+      await api.post(`${Api_Endpoints.CHECKOUT.CHECKOUT_BOOK}/${book.bookid}`, {
+        copies: 1
+      });
       
-      await api.post('/checkout', { bookId: book._id });
       alert('Book checked out successfully!');
-     
-      fetchBookDetails();
+      fetchBookDetails(); // Refresh book details to show updated copies
     } catch (err) {
       console.error('Error checking out book:', err);
-      alert('Failed to checkout book');
+      const errorMessage = err.response?.data?.message || 'Failed to checkout book';
+      alert(errorMessage);
     }
   };
 
   const handleUpdateDetails = () => {
-    if (onNavigate) {
+    if (onNavigate && book) {
       onNavigate('edit-book', { bookId: book._id });
     }
   };
@@ -60,7 +65,7 @@ const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
   const handleDeleteBook = async () => {
     if (window.confirm(`Are you sure you want to delete "${book.name}"?`)) {
       try {
-        await api.delete(`/book/${book._id}`);
+        await api.delete(`${Api_Endpoints.BOOKS.DELETE_BOOK}/${book._id}`);
         alert('Book deleted successfully!');
         handleBackToLibrary();
       } catch (err) {
@@ -72,32 +77,38 @@ const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner">📖</div>
-        <p>Loading book details...</p>
+      <div className="book-details-container">
+        <div className="loading-container">
+          <div className="loading-spinner">📖</div>
+          <p>Loading book details...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="error-container">
-        <div className="error-icon">❌</div>
-        <h3>{error}</h3>
-        <button onClick={handleBackToLibrary} className="back-btn">
-          Back to Library
-        </button>
+      <div className="book-details-container">
+        <div className="error-container">
+          <div className="error-icon">❌</div>
+          <h3>{error}</h3>
+          <button onClick={handleBackToLibrary} className="back-btn">
+            Back to Library
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!book) {
     return (
-      <div className="error-container">
-        <h3>Book not found</h3>
-        <button onClick={handleBackToLibrary} className="back-btn">
-          Back to Library
-        </button>
+      <div className="book-details-container">
+        <div className="error-container">
+          <h3>Book not found</h3>
+          <button onClick={handleBackToLibrary} className="back-btn">
+            Back to Library
+          </button>
+        </div>
       </div>
     );
   }
@@ -141,19 +152,20 @@ const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
                   <span className="detail-label">Book ID</span>
                   <span className="detail-value">{book.bookid}</span>
                 </div>
-                
-                <p className='book-descrption'>
-                  <span className="detail-label">Description</span><br></br>
-                  <span className="detail-value">{book.description || 'NA'}</span>
-                </p>
+                <div className="detail-item full-width">
+                  <span className="detail-label">Description</span>
+                  <span className="detail-value description-text">
+                    {book.description || 'No description available'}
+                  </span>
+                </div>
                 <div className="detail-item">
                   <span className="detail-label">Copies Available</span>
                   <span className="detail-value">{book.copies}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Status</span>
-                  <span className={`availability-status ${book.status.toLowerCase()}`}>
-                    {book.status}
+                  <span className={`availability-status ${book.copies > 0 ? 'available' : 'unavailable'}`}>
+                    {book.copies > 0 ? 'Available' : 'Unavailable'}
                   </span>
                 </div>
               </div>
@@ -161,21 +173,21 @@ const BookDetails = ({ onNavigate, isAdmin=true, bookId}) => {
 
             <div className="action-buttons">
               <button 
-                className={`action-btn checkout-btn ${book.status !== 'Available' ? 'disabled' : ''}`}
+                className={`action-btn checkout-btn ${book.copies === 0 ? 'disabled' : ''}`}
                 onClick={handleCheckout}
-                disabled={book.status !== 'Available'}
+                disabled={book.copies === 0}
               >
-                {book.status === 'Available' ? 'Checkout Book' : 'Not Available'}
+                {book.copies > 0 ? `Checkout Book (${book.copies} available)` : 'Not Available'}
               </button>
               {isAdmin && (
-                <>
+                <div className="admin-actions">
                   <button className="action-btn update-btn" onClick={handleUpdateDetails}>
                     Update Details
                   </button>
                   <button className="action-btn delete-btn" onClick={handleDeleteBook}>
                     Delete Book
                   </button>
-                </>
+                </div>
               )}
             </div>
           </div>

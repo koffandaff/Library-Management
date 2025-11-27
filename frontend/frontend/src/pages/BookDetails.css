@@ -1,10 +1,48 @@
 .book-details-container {
+  position: relative;
   min-height: 100vh;
-  background-color: #f6f7f8;
+  background-color: #101922;
   font-family: 'Inter', sans-serif;
-  color: #0d141b;
+  color: #e5e7eb;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+.book-details-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(19, 127, 236, 0.15);
+  filter: blur(4rem);
+  animation: float 8s ease-in-out infinite;
+}
+
+.bg-blob-1 {
+  width: 28rem;
+  height: 28rem;
+  top: -8rem;
+  left: -8rem;
+  animation-delay: 0s;
+}
+
+.bg-blob-2 {
+  width: 24rem;
+  height: 24rem;
+  bottom: -6rem;
+  right: -6rem;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  33% { transform: translate(25px, -15px) rotate(120deg); }
+  66% { transform: translate(-15px, 10px) rotate(240deg); }
 }
 
 .book-details-content {
@@ -12,38 +50,48 @@
   display: flex;
   flex-direction: column;
   padding: 2rem;
+  position: relative;
+  z-index: 10;
 }
 
 .breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  font-size: 0.875rem;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+  font-size: 0.95rem;
 }
 
 .breadcrumb-link {
   background: none;
   border: none;
-  color: #137fec;
+  color: #60a5fa;
   cursor: pointer;
-  font-weight: 500;
-  transition: color 0.2s ease;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(1rem);
 }
 
 .breadcrumb-link:hover {
-  background-color: rgba(19, 127, 236, 0.1);
+  background: rgba(96, 165, 250, 0.1);
+  color: #93c5fd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -2px rgba(96, 165, 250, 0.3);
 }
 
 .breadcrumb-separator {
-  color: #6c757d;
+  color: #64748b;
 }
 
 .breadcrumb-current {
-  color: #0d141b;
-  font-weight: 500;
+  color: #e5e7eb;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(1rem);
 }
 
 .book-details-main {
@@ -62,26 +110,71 @@
   }
 }
 
+/* Book Cover Section with Cool Placeholder */
 .book-cover-section {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .book-cover {
   width: 100%;
-  max-width: 300px;
+  max-width: 350px;
   aspect-ratio: 2/3;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border-radius: 1.5rem;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0%, 100% { transform: rotate(45deg) translate(-30%, -30%); }
+  50% { transform: rotate(45deg) translate(30%, 30%); }
+}
+
+.book-cover:hover {
+  transform: translateY(-8px) rotate(2deg);
+  box-shadow: 
+    0 35px 60px -12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.book-cover-icon {
+  font-size: 4rem;
+  color: white;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  z-index: 2;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.book-cover:hover .book-cover-icon {
+  transform: scale(1.2) rotate(-5deg);
 }
 
 .book-info-section {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .book-header {
@@ -89,178 +182,408 @@
 }
 
 .book-title {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   font-weight: 900;
-  color: #0d141b;
+  color: white;
   line-height: 1.2;
-  letter-spacing: -0.033em;
-  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .book-author {
-  font-size: 1.25rem;
-  color: #6c757d;
+  font-size: 1.5rem;
+  color: #9ca3af;
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.book-author::before {
+  content: '✍️';
+  font-size: 1.25rem;
 }
 
 .book-description {
   font-size: 1.125rem;
-  line-height: 1.6;
-  color: #6c757d;
+  line-height: 1.7;
+  color: #d1d5db;
   margin: 0;
+  background: rgba(30, 41, 59, 0.4);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(1rem);
+  transition: all 0.3s ease;
+}
+
+.book-description:hover {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .book-details-card {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(16, 25, 34, 0.6);
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(1.5rem);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.book-details-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #60a5fa, #3b82f6, #60a5fa);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: -200% 0; }
+  50% { background-position: 200% 0; }
+}
+
+.book-details-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 35px 60px -12px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(96, 165, 250, 0.2);
 }
 
 .details-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.details-title::before {
+  content: '📋';
   font-size: 1.25rem;
-  font-weight: 700;
-  color: #0d141b;
-  margin: 0 0 1.5rem 0;
 }
 
 .details-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
 }
 
 .detail-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(30, 41, 59, 0.4);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(1rem);
+  transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.2);
 }
 
 .detail-label {
   font-size: 0.875rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-weight: 700;
+  color: #9ca3af;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+.detail-label::before {
+  font-size: 0.8rem;
+}
+
+.detail-label[data-label="category"]::before { content: '🏷️'; }
+.detail-label[data-label="book-id"]::before { content: '🆔'; }
+.detail-label[data-label="copies"]::before { content: '📚'; }
+.detail-label[data-label="status"]::before { content: '📊'; }
+
 .detail-value {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #0d141b;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
 }
 
 .availability-status {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   text-transform: capitalize;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid;
+  backdrop-filter: blur(1rem);
+  transition: all 0.3s ease;
+}
+
+.availability-status::before {
+  font-size: 0.8rem;
 }
 
 .availability-status.available {
-  background-color: rgba(40, 167, 69, 0.1);
-  color: #28a745;
-  border: 1px solid rgba(40, 167, 69, 0.2);
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.availability-status.available::before {
+  content: '✅';
 }
 
 .availability-status.checked-out {
-  background-color: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  border: 1px solid rgba(220, 53, 69, 0.2);
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.availability-status.checked-out::before {
+  content: '⏳';
+}
+
+.detail-item:hover .availability-status {
+  transform: scale(1.05);
 }
 
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  gap: 1.25rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .action-btn {
-  padding: 0.875rem 1.5rem;
+  padding: 1.25rem 2rem;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   flex: 1;
-  min-width: 140px;
+  min-width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
 }
 
 .checkout-btn {
-  background-color: #137fec;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: white;
+  box-shadow: 0 8px 25px -8px rgba(37, 99, 235, 0.4);
 }
 
 .checkout-btn:hover {
-  background-color: #106bc7;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 20px 40px -10px rgba(37, 99, 235, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.checkout-btn:hover::before {
+  left: 100%;
 }
 
 .update-btn {
-  background-color: #e9ecef;
-  color: #0d141b;
-  border: 1px solid #dee2e6;
+  background: rgba(30, 41, 59, 0.4);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.2);
 }
 
 .update-btn:hover {
-  background-color: #dee2e6;
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(96, 165, 250, 0.3);
+  color: #60a5fa;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 30px -5px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(96, 165, 250, 0.1);
 }
 
 .delete-btn {
-  background-color: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  border: 1px solid rgba(220, 53, 69, 0.2);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  box-shadow: 0 8px 25px -8px rgba(220, 38, 38, 0.4);
 }
 
 .delete-btn:hover {
-  background-color: rgba(220, 53, 69, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 20px 40px -10px rgba(220, 38, 38, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .book-details-container {
-    background-color: #101922;
-    color: #e5e7eb;
+.delete-btn:hover::before {
+  left: 100%;
+}
+
+.action-btn span:first-child {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.action-btn:hover span:first-child {
+  transform: scale(1.2);
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: rgba(16, 25, 34, 0.6);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(1.5rem);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.loading-spinner {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  display: block;
+  animation: spin 2s linear infinite;
+  color: #60a5fa;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  display: block;
+  color: #f87171;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.loading-container p {
+  color: #60a5fa;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.error-container h3 {
+  color: #f87171;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.back-btn {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .book-details-content {
+    padding: 1rem;
   }
   
-  .breadcrumb-current {
-    color: white;
+  .book-details-main {
+    gap: 1.5rem;
   }
   
   .book-title {
-    color: white;
+    font-size: 2rem;
   }
   
-  .book-details-card {
-    background-color: #1f2937;
-    border-color: #374151;
+  .book-author {
+    font-size: 1.25rem;
   }
   
-  .details-title {
-    color: white;
+  .book-cover {
+    max-width: 280px;
   }
   
-  .detail-value {
-    color: white;
+  .details-grid {
+    grid-template-columns: 1fr;
   }
   
   .action-buttons {
-    border-top-color: #374151;
+    flex-direction: column;
   }
   
-  .update-btn {
-    background-color: #374151;
-    color: #e5e7eb;
-    border-color: #4b5563;
+  .action-btn {
+    min-width: auto;
   }
   
-  .update-btn:hover {
-    background-color: #4b5563;
+  .book-details-card {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Light mode fallback */
+@media (prefers-color-scheme: light) {
+  .book-details-container {
+    background-color: #0f172a;
   }
 }

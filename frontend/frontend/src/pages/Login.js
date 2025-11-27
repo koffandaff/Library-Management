@@ -6,30 +6,55 @@ const Login = ({ onLogin, onNavigate }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
-    password: '' 
-
+    password: ''
   });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleNavigation = () => {
-    if(onNavigate){
-      onNavigate('register') 
+    if (onNavigate) {
+      onNavigate('register');
     }
-  }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+
     try {
-      await onLogin(formData.email, formData.password)
-      
+      await onLogin(formData.email, formData.password);
+    } catch (err) {
+      setErrors({ 
+        submit: err.response?.data?.message || 'Invalid credentials. Please try again.' 
+      });
+    } finally {
+      setIsLoading(false);
     }
-    catch (err){
-      console.log(err)
-    }
-    finally{
-      console.log(formData)
-    }
-    
-    
   };
 
   const handleInputChange = (e) => {
@@ -38,6 +63,13 @@ const Login = ({ onLogin, onNavigate }) => {
       ...prev,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   return (
@@ -50,38 +82,52 @@ const Login = ({ onLogin, onNavigate }) => {
       <div className="login-card">
         <div className="login-content">
           <div className="login-header">
-            <h1 className="login-title">Sign In</h1>
-            <p className="login-subtitle">Welcome back to the Library Management System</p>
+            <div className="login-icon">📚</div>
+            <h1 className="login-title">Welcome Back</h1>
+            <p className="login-subtitle">Sign in to access your library account</p>
           </div>
+          
+          {/* Error Toast */}
+          {errors.submit && (
+            <div className="error-toast">
+              <span className="error-icon">⚠️</span>
+              <span className="error-message">{errors.submit}</span>
+            </div>
+          )}
           
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email" className="form-label">Email Address</label>
+              <label htmlFor="email" className="form-label">
+                <span className="label-icon">📧</span>
+                Email Address
+              </label>
               <div className="input-container">
-                <span className="material-symbols-outlined input-icon"></span>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   placeholder="you@example.com"
-                  className="form-input"
+                  className={`form-input ${errors.email ? 'error' : ''}`}
                   value={formData.email}
                   onChange={handleInputChange}
                   required
                 />
               </div>
+              {errors.email && <span className="field-error">{errors.email}</span>}
             </div>
             
             <div className="form-group">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password" className="form-label">
+                <span className="label-icon">🔒</span>
+                Password
+              </label>
               <div className="input-container">
-                <span className="material-symbols-outlined input-icon"></span>
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  className="form-input"
+                  className={`form-input ${errors.password ? 'error' : ''}`}
                   value={formData.password}
                   onChange={handleInputChange}
                   required
@@ -91,11 +137,10 @@ const Login = ({ onLogin, onNavigate }) => {
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <span className="material-symbols-outlined">
-                    {showPassword ? "don't show" : "show"}
-                  </span>
+                  {showPassword ? '🙈' : '👁️'}
                 </button>
               </div>
+              {errors.password && <span className="field-error">{errors.password}</span>}
             </div>
             
             <div className="form-options">
@@ -106,17 +151,36 @@ const Login = ({ onLogin, onNavigate }) => {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="checkbox-input"
                 />
+                <span className="checkbox-custom"></span>
                 <span className="checkbox-text">Remember Me</span>
               </label>
-              <a href="#forgot-password" className="forgot-link">Forgot Password?</a>
+              <button type="button" className="forgot-link">Forgot Password?</button>
             </div>
             
-            <button type="submit" className="login-button">
-              Login
+            <button 
+              type="submit" 
+              className={`login-button ${isLoading ? 'loading' : ''}`}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Signing In...
+                </>
+              ) : (
+                <>
+                  <span className="btn-icon">🚀</span>
+                  Sign In
+                </>
+              )}
             </button>
             
             <div className="signup-link">
-              <p>Don't have an account? <a href="#register"  onClick={handleNavigation} className="signup-text">Sign Up</a></p>
+              <p>Don't have an account? 
+                <button type="button" onClick={handleNavigation} className="signup-text">
+                  Create Account
+                </button>
+              </p>
             </div>
           </form>
         </div>

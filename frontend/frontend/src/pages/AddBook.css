@@ -1,15 +1,17 @@
 .add-book-container {
+  display: flex;
   min-height: 100vh;
   background-color: #f6f7f8;
   font-family: 'Inter', sans-serif;
-  display: flex;
 }
 
+/* Sidebar Styles */
 .add-book-sidebar {
-  width: 16rem;
-  background-color: white;
-  border-right: 1px solid #e5e7eb;
-  padding: 1rem;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(1rem);
+  border-right: 1px solid rgba(226, 232, 240, 0.5);
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
 }
@@ -17,37 +19,34 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-bottom: 3rem;
 }
 
 .logo {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background-color: #137fec;
-  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjSFJTMpRWfKs1pFKI4ROVkPoVWfKDcINCfhKBQqDVnL2c3UzyvsgAT7AtJEWtfG0npW1t1L-lFyGFi-wLeqQhlsG6zqDEoBY_JSDNEW5_VtzLSjbrHEnFbrevQoxn95JKIYycrfEFJ7Iotfu9NW5qu6PZ6oeUbMGTZIGFnG58o3T2VCT6QdOuvD6Fh_2PX8TXrm0skOoMpmUKI0_cgkJHbyAiOhvy-2axdwvBL0unTvtxX5iCJE8Jiwym9Lnq_OMzWpbUtljvV5g');
-  background-size: cover;
-  background-position: center;
+  width: 40px;
+  height: 40px;
+  background: #137fec;
+  border-radius: 0.5rem;
 }
 
 .admin-info h1 {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #0d141b;
+  color: #1e293b;
   margin: 0;
 }
 
 .admin-info p {
   font-size: 0.875rem;
-  color: #6c757d;
+  color: #64748b;
   margin: 0;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
   flex: 1;
 }
 
@@ -55,181 +54,276 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
   border-radius: 0.5rem;
-  color: #0d141b;
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #64748b;
   transition: all 0.2s ease;
 }
 
 .nav-item:hover {
-  background-color: rgba(19, 127, 236, 0.1);
+  background: rgba(19, 127, 236, 0.1);
   color: #137fec;
 }
 
 .nav-item.active {
-  background-color: rgba(19, 127, 236, 0.1);
+  background: rgba(19, 127, 236, 0.1);
   color: #137fec;
+  font-weight: 500;
+}
+
+.nav-item span:first-child {
+  font-size: 1.25rem;
 }
 
 .add-book-sidebar-btn {
-  width: 100%;
-  padding: 0.625rem 1rem;
-  background-color: #137fec;
+  margin-top: auto;
+  padding: 0.75rem 1.5rem;
+  background: #137fec;
   color: white;
   border: none;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 700;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
   transition: background-color 0.2s ease;
 }
 
 .add-book-sidebar-btn:hover {
-  background-color: #106bc7;
+  background: #106bc7;
 }
 
+/* Main Content Styles */
 .add-book-main {
   flex: 1;
   padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: auto;
+}
+
+.add-book-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(19, 127, 236, 0.2);
+  filter: blur(3rem);
+}
+
+.bg-blob-1 {
+  width: 24rem;
+  height: 24rem;
+  top: -5rem;
+  left: -5rem;
+}
+
+.bg-blob-2 {
+  width: 24rem;
+  height: 24rem;
+  bottom: -5rem;
+  right: -5rem;
 }
 
 .add-book-content {
-  max-width: 56rem;
-  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 48rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+  padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(1rem);
 }
 
+/* Page Header */
 .page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 2rem;
 }
 
 .page-header h1 {
   font-size: 1.875rem;
   font-weight: 900;
-  color: #0d141b;
-  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+  text-align: center;
+  margin: 0;
 }
 
 .page-header p {
   font-size: 1rem;
-  color: #6c757d;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #64748b;
+  text-align: center;
   margin: 0;
 }
 
+/* Error Message */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 0.5rem;
+  color: #dc2626;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Styles */
 .add-book-form {
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
 }
 
 .form-row.full-width {
   grid-template-columns: 1fr;
 }
 
-.add-book-form label {
+.form-row label {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.add-book-form label span {
+.form-row label span {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #0d141b;
+  color: #374151;
 }
 
-.add-book-form input,
-.add-book-form select,
-.add-book-form textarea {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
+.form-row input,
+.form-row select,
+.form-row textarea {
+  height: 3rem;
+  border: none;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
-  background-color: #f6f7f8;
-  transition: all 0.2s ease;
+  padding: 0 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1f2937;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(0.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
-.add-book-form input:focus,
-.add-book-form select:focus,
-.add-book-form textarea:focus {
+.form-row textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 1rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
   outline: none;
-  border-color: #137fec;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2);
 }
 
-.add-book-form select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.5rem center;
-  background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
-  padding-right: 2.5rem;
+.form-row input::placeholder,
+.form-row textarea::placeholder {
+  color: #6b7280;
 }
 
+/* Form Actions */
 .form-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 1rem;
+  justify-content: flex-end;
   padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .cancel-btn {
-  padding: 0.625rem 1.5rem;
-  background-color: #f6f7f8;
-  border: 1px solid #e5e7eb;
+  height: 3rem;
+  padding: 0 1.5rem;
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+  color: #374151;
   border-radius: 0.5rem;
-  color: #0d141b;
-  font-size: 0.875rem;
-  font-weight: 700;
   cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
   transition: all 0.2s ease;
 }
 
-.cancel-btn:hover {
-  background-color: #e5e7eb;
+.cancel-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .submit-btn {
-  padding: 0.625rem 1.5rem;
-  background-color: #137fec;
+  height: 3rem;
+  padding: 0 1.5rem;
   border: none;
-  border-radius: 0.5rem;
+  background-color: #137fec;
   color: white;
-  font-size: 0.875rem;
-  font-weight: 700;
+  border-radius: 0.5rem;
   cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
   transition: background-color 0.2s ease;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background-color: #106bc7;
 }
 
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Success Toast */
 .success-toast {
   position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
+  top: 2rem;
+  right: 2rem;
+  background: #10b981;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background-color: #10b981;
-  color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  animation: slideIn 0.3s ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideIn 0.3s ease-out;
+  z-index: 1000;
 }
 
 @keyframes slideIn {
@@ -243,6 +337,34 @@
   }
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+  .add-book-container {
+    flex-direction: column;
+  }
+  
+  .add-book-sidebar {
+    width: 100%;
+    padding: 1rem;
+  }
+  
+  .add-book-main {
+    padding: 1rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .add-book-content {
+    padding: 1.5rem;
+  }
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .add-book-container {
@@ -250,56 +372,65 @@
   }
   
   .add-book-sidebar {
-    background-color: #1f2937;
-    border-right-color: #374151;
+    background: rgba(16, 25, 34, 0.3);
+    border-right-color: rgba(51, 65, 85, 0.5);
   }
   
-  .admin-info h1 {
+  .add-book-content {
+    background: rgba(16, 25, 34, 0.3);
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+  
+  .admin-info h1,
+  .page-header h1 {
     color: white;
   }
   
+  .admin-info p,
+  .page-header p {
+    color: #9ca3af;
+  }
+  
   .nav-item {
-    color: #e5e7eb;
+    color: #9ca3af;
   }
   
   .nav-item:hover,
   .nav-item.active {
-    background-color: rgba(19, 127, 236, 0.2);
+    color: #60a5fa;
   }
   
-  .add-book-form {
-    background-color: #1f2937;
-  }
-  
-  .add-book-form label span {
-    color: white;
-  }
-  
-  .add-book-form input,
-  .add-book-form select,
-  .add-book-form textarea {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: white;
-  }
-  
-  .add-book-form input:focus,
-  .add-book-form select:focus,
-  .add-book-form textarea:focus {
-    background-color: #374151;
-  }
-  
-  .cancel-btn {
-    background-color: #374151;
-    border-color: #4b5563;
+  .form-row label span {
     color: #e5e7eb;
   }
   
-  .cancel-btn:hover {
-    background-color: #4b5563;
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    color: white;
+    background-color: rgba(30, 41, 59, 0.2);
+    border-color: rgba(51, 65, 85, 0.3);
   }
   
-  .page-header h1 {
-    color: white;
+  .form-row input:focus,
+  .form-row select:focus,
+  .form-row textarea:focus {
+    background-color: rgba(30, 41, 59, 0.4);
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+  
+  .form-row input::placeholder,
+  .form-row textarea::placeholder {
+    color: #9ca3af;
+  }
+  
+  .cancel-btn {
+    background: rgba(30, 41, 59, 0.2);
+    color: #e5e7eb;
+    border-color: rgba(51, 65, 85, 0.5);
+  }
+  
+  .cancel-btn:hover:not(:disabled) {
+    background: rgba(30, 41, 59, 0.4);
   }
 }

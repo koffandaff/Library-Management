@@ -1,69 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api, { Api_Endpoints } from '../service/api';
 import './CheckoutHistory.css';
 
 const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
+  const [checkouts, setCheckouts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const checkouts = [
-    {
-      id: 1,
-      bookName: "The Midnight Library",
-      userName: "Alice Johnson",
-      checkoutDate: "Oct 26, 2023",
-      status: "returned"
-    },
-    {
-      id: 2,
-      bookName: "Project Hail Mary",
-      userName: "Bob Smith",
-      checkoutDate: "Oct 22, 2023",
-      status: "active"
-    },
-    {
-      id: 3,
-      bookName: "Dune",
-      userName: "Charlie Brown",
-      checkoutDate: "Oct 15, 2023",
-      status: "returned"
-    },
-    {
-      id: 4,
-      bookName: "Klara and the Sun",
-      userName: "Diana Prince",
-      checkoutDate: "Oct 14, 2023",
-      status: "active"
-    },
-    {
-      id: 5,
-      bookName: "The Four Winds",
-      userName: "Eve Adams",
-      checkoutDate: "Sep 30, 2023",
-      status: "returned"
+  useEffect(() => {
+    fetchAllCheckouts();
+  }, []);
+
+  const fetchAllCheckouts = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(Api_Endpoints.CHECKOUT.ALL_HISTORY);
+      console.log('All checkouts response:', response.data);
+      
+      // FIX: Handle both response formats
+      const checkoutData = response.data.data || response.data.allrecords || [];
+      setCheckouts(checkoutData);
+      
+    } catch (err) {
+      setError('Failed to fetch checkout records');
+      console.error('Error fetching checkouts:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const getStatusBadge = (checkout) => {
+    if (checkout.returnDate) {
+      return (
+        <span className="status-badge returned">
+          <span className="status-dot"></span>
+          Returned
+        </span>
+      );
+    } else {
+      return (
+        <span className="status-badge active">
+          <span className="status-dot"></span>
+          Active
+        </span>
+      );
+    }
+  };
 
   const filteredCheckouts = checkouts.filter(checkout => {
-    const matchesSearch = checkout.bookName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         checkout.userName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || checkout.status === statusFilter;
+    const matchesSearch = checkout.book?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         checkout.user?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || 
+                         (statusFilter === 'active' && !checkout.returnDate) ||
+                         (statusFilter === 'returned' && checkout.returnDate);
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      returned: { label: 'Returned', color: '#10b981' },
-      active: { label: 'Active', color: '#f59e0b' }
-    };
-    
-    const config = statusConfig[status];
+  if (loading) {
     return (
-      <span className="status-badge" style={{ backgroundColor: `${config.color}20`, color: config.color }}>
-        <span className="status-dot" style={{ backgroundColor: config.color }}></span>
-        {config.label}
-      </span>
+      <div className="checkout-history-container">
+        <div className="loading">Loading checkout history...</div>
+      </div>
     );
-  };
+  }
+
+  if (error) {
+    return (
+      <div className="checkout-history-container">
+        <div className="error-container">
+          <h3>{error}</h3>
+          <button onClick={() => onNavigate('books')} className="back-btn">
+            Back to Books
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="checkout-history-container">
@@ -71,6 +94,7 @@ const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
         <div className="page-header">
           <h1>All Checkout History</h1>
           <p>View and manage all book checkouts across the system. {userRole === 'admin' && '(Admin View)'}</p>
+          <p>Total Records: {checkouts.length}</p>
         </div>
 
         <div className="filters-section">
@@ -78,7 +102,7 @@ const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
             <span className="material-symbols-outlined search-icon">search</span>
             <input
               type="text"
-              placeholder="Search by book name..."
+              placeholder="Search by book name or user..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -95,10 +119,6 @@ const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
               <option value="active">Active</option>
               <option value="returned">Returned</option>
             </select>
-            
-            <button className="reset-filters">
-              Reset Filters
-            </button>
           </div>
         </div>
 
@@ -106,58 +126,40 @@ const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
           <table className="checkout-table">
             <thead>
               <tr>
-                <th>
-                  <button className="sortable-header">
-                    Book Name
-                    <span className="material-symbols-outlined">swap_vert</span>
-                  </button>
-                </th>
+                <th>Book Name</th>
                 <th>User</th>
-                <th>
-                  <button className="sortable-header">
-                    Checkout Date
-                    <span className="material-symbols-outlined">swap_vert</span>
-                  </button>
-                </th>
+                <th>Email</th>
+                <th>Checkout Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredCheckouts.map(checkout => (
-                <tr key={checkout.id}>
-                  <td className="book-name">{checkout.bookName}</td>
-                  <td className="user-name">{checkout.userName}</td>
-                  <td className="checkout-date">{checkout.checkoutDate}</td>
-                  <td>{getStatusBadge(checkout.status)}</td>
+                <tr key={checkout._id}>
+                  <td className="book-name">{checkout.book}</td>
+                  <td className="user-name">{checkout.user}</td>
+                  <td className="user-email">{checkout.email}</td>
+                  <td className="checkout-date">{formatDate(checkout.checkoutDate)}</td>
+                  <td className="due-date">{formatDate(checkout.dueDate)}</td>
+                  <td className="return-date">
+                    {checkout.returnDate ? formatDate(checkout.returnDate) : 'Not Returned'}
+                  </td>
+                  <td>{getStatusBadge(checkout)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <div className="pagination-section">
-          <div className="pagination-info">
-            Showing <strong>1</strong> to <strong>{filteredCheckouts.length}</strong> of <strong>97</strong> results
+        {filteredCheckouts.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-icon">📚</div>
+            <h3>No checkout records found</h3>
+            <p>Try adjusting your search or filters</p>
           </div>
-          
-          <div className="pagination-controls">
-            <button className="pagination-btn">
-              <span className="material-symbols-outlined">chevron_left</span>
-            </button>
-            
-            <button className="pagination-btn active">1</button>
-            <button className="pagination-btn">2</button>
-            <button className="pagination-btn">3</button>
-            
-            <span className="pagination-ellipsis">...</span>
-            
-            <button className="pagination-btn">10</button>
-            
-            <button className="pagination-btn">
-              <span className="material-symbols-outlined">chevron_right</span>
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

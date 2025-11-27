@@ -1,5 +1,5 @@
 const express = require('express');
-const { login, register, currentUser, getAllUsers, deleteUser } = require('../controller/UserController');
+const { login, register, currentUser, refreshTokenWithRotation,logout, getAllUsers, deleteUser } = require('../controller/UserController');
 const validateToken = require('../middleware/validateToken')
 const isAdmin = require('../middleware/Isadmin');
 const router = express.Router();
@@ -12,6 +12,10 @@ router.post('/login', login)
 
 router.post('/register', register)
 
+// refreshtoken rotation lol
+router.post('/refresh', refreshTokenWithRotation)
+
+
 // Current USer info 
 router.get('/current', validateToken, currentUser)
 
@@ -20,5 +24,8 @@ router.get('/', validateToken, isAdmin ,getAllUsers)
 
 // Delete a user
 router.delete('/delete/:id', validateToken,  isAdmin, deleteUser)
+
+//logout
+router.post('/logout', validateToken, logout);
 
 module.exports= router

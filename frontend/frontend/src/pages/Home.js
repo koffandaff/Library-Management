@@ -68,15 +68,7 @@ const Home = ({ isLoggedIn, onNavigate }) => {
         )}
       </div>
       
-      <footer className="home-footer">
-        <div className="footer-links">
-          <a href="#about" className="footer-link">About</a>
-          <a href="#contact" className="footer-link">Contact</a>
-          <a href="#terms" className="footer-link">Terms of Service</a>
-          <a href="#privacy" className="footer-link">Privacy Policy</a>
-        </div>
-        <p className="footer-copyright">© 2024 SmartLibrary. All rights reserved.</p>
-      </footer>
+      
     </div>
   ); 
 };

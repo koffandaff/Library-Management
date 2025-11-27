@@ -1,27 +1,29 @@
 const express = require('express');
 const connectDb = require('./config/ConnectDb');
 const cors = require('cors');
+const cookieparser = require('cookie-parser')
 
 const allowedOrigins = [
     '*',
     'http://localhost:3001/',
 ]
 
-const corsOption = {
-    origin: "*",
-    method: 'GET,POST,PUT,DELETE',
-    credentials: true, 
-}
+const corsOptions = {
+    origin: 'http://localhost:3001', 
+    credentials: true, // ← IMPORTANT for cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+};
 
 const app = express();
 const PORT = 3000; // not using env variables for simplicity
-
+app.use(cookieparser())
 app.use(express.json()); // Middleware to parse JSON bodies
 
 connectDb(); // Connect to Database
 
 
-app.use(cors(corsOption))
+app.use(cors(corsOptions))
 
 // Routes
 app.use('/api/users', require('./routes/User')) // Authentication routes

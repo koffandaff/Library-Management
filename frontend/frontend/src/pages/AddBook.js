@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
+import api, { Api_Endpoints } from '../service/api';
 import './AddBook.css';
 
 const AddBook = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    author: '',
+    name: '',
+    authorname: '',
     category: '',
+    bookid: '',
+    copies: '',
+    status: 'Available',
     description: ''
   });
+  const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,17 +24,54 @@ const AddBook = ({ onNavigate }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Adding book:', formData);
-    // In real app, you'd make API call here
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      if (onNavigate) {
-        onNavigate('books');
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Validate required fields
+      if (!formData.name || !formData.authorname || !formData.category || !formData.bookid || !formData.copies) {
+        setError('Please fill in all required fields');
+        return;
       }
-    }, 2000);
+
+      // Convert copies to number
+      const bookData = {
+        ...formData,
+        copies: parseInt(formData.copies)
+      };
+
+      console.log('Adding book:', bookData);
+      
+      const response = await api.post(Api_Endpoints.BOOKS.CREATE_BOOK, bookData);
+      console.log('Book added successfully:', response.data);
+
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        if (onNavigate) {
+          onNavigate('books');
+        }
+      }, 2000);
+
+      // Reset form
+      setFormData({
+        name: '',
+        authorname: '',
+        category: '',
+        bookid: '',
+        copies: '',
+        status: 'Available',
+        description: ''
+      });
+
+    } catch (err) {
+      console.error('Error adding book:', err);
+      setError(err.response?.data?.message || 'Failed to add book');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -49,25 +92,30 @@ const AddBook = ({ onNavigate }) => {
         </div>
         
         <nav className="sidebar-nav">
-          <a href="#dashboard" className="nav-item">
-            <span className="material-symbols-outlined">grid_view</span>
+          <button 
+            className="nav-item"
+            onClick={() => onNavigate('admin-dashboard')}
+          >
+            <span>📊</span>
             <span>Dashboard</span>
-          </a>
-          <a href="#books" className="nav-item active">
-            <span className="material-symbols-outlined">menu_book</span>
+          </button>
+          <button 
+            className="nav-item active"
+            onClick={() => onNavigate('books')}
+          >
+            <span>📚</span>
             <span>Books</span>
-          </a>
-          <a href="#members" className="nav-item">
-            <span className="material-symbols-outlined">groups</span>
-            <span>Members</span>
-          </a>
-          <a href="#settings" className="nav-item">
-            <span className="material-symbols-outlined">settings</span>
-            <span>Settings</span>
-          </a>
+          </button>
+          <button 
+            className="nav-item"
+            onClick={() => onNavigate('authors')}
+          >
+            <span>👥</span>
+            <span>Authors</span>
+          </button>
         </nav>
 
-        <button className="add-book-sidebar-btn">
+        <button className="add-book-sidebar-btn" onClick={() => onNavigate('add-book')}>
           Add New Book
         </button>
       </div>
@@ -79,15 +127,23 @@ const AddBook = ({ onNavigate }) => {
             <p>Fill in the details below to add a new book to the library catalogue.</p>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="error-message">
+              <span>❌</span>
+              <span>{error}</span>
+            </div>
+          )}
+
           <form className="add-book-form" onSubmit={handleSubmit}>
             <div className="form-row full-width">
               <label>
-                <span>Book Title</span>
+                <span>Book Title *</span>
                 <input
                   type="text"
-                  name="title"
+                  name="name"
                   placeholder="e.g., The Great Gatsby"
-                  value={formData.title}
+                  value={formData.name}
                   onChange={handleInputChange}
                   required
                 />
@@ -96,32 +152,68 @@ const AddBook = ({ onNavigate }) => {
 
             <div className="form-row">
               <label>
-                <span>Author</span>
-                <select
-                  name="author"
-                  value={formData.author}
+                <span>Author Name *</span>
+                <input
+                  type="text"
+                  name="authorname"
+                  placeholder="e.g., F. Scott Fitzgerald"
+                  value={formData.authorname}
                   onChange={handleInputChange}
                   required
-                >
-                  <option value="">Select an author</option>
-                  <option value="F. Scott Fitzgerald">F. Scott Fitzgerald</option>
-                  <option value="George Orwell">George Orwell</option>
-                  <option value="Jane Austen">Jane Austen</option>
-                  <option value="J.K. Rowling">J.K. Rowling</option>
-                  <option value="Stephen King">Stephen King</option>
-                </select>
+                />
               </label>
               
               <label>
-                <span>Category</span>
+                <span>Book ID *</span>
+                <input
+                  type="text"
+                  name="bookid"
+                  placeholder="e.g., 1001"
+                  value={formData.bookid}
+                  onChange={handleInputChange}
+                  required
+                />
+              </label>
+            </div>
+
+            <div className="form-row">
+              <label>
+                <span>Category *</span>
                 <input
                   type="text"
                   name="category"
-                  placeholder="e.g., Fiction, Classic"
+                  placeholder="e.g., Fiction, Classic, Science"
                   value={formData.category}
                   onChange={handleInputChange}
                   required
                 />
+              </label>
+
+              <label>
+                <span>Number of Copies *</span>
+                <input
+                  type="number"
+                  name="copies"
+                  min="1"
+                  placeholder="e.g., 5"
+                  value={formData.copies}
+                  onChange={handleInputChange}
+                  required
+                />
+              </label>
+            </div>
+
+            <div className="form-row">
+              <label>
+                <span>Status</span>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleInputChange}
+                >
+                  <option value="Available">Available</option>
+                  <option value="Unavailable">Unavailable</option>
+                </select>
               </label>
             </div>
 
@@ -134,17 +226,25 @@ const AddBook = ({ onNavigate }) => {
                   value={formData.description}
                   onChange={handleInputChange}
                   rows="4"
-                  required
                 ></textarea>
               </label>
             </div>
 
             <div className="form-actions">
-              <button type="button" className="cancel-btn" onClick={handleCancel}>
+              <button 
+                type="button" 
+                className="cancel-btn" 
+                onClick={handleCancel}
+                disabled={loading}
+              >
                 Cancel
               </button>
-              <button type="submit" className="submit-btn">
-                Add Book
+              <button 
+                type="submit" 
+                className="submit-btn"
+                disabled={loading}
+              >
+                {loading ? 'Adding Book...' : 'Add Book'}
               </button>
             </div>
           </form>
@@ -153,8 +253,8 @@ const AddBook = ({ onNavigate }) => {
 
       {showSuccess && (
         <div className="success-toast">
-          <span className="material-symbols-outlined">check_circle</span>
-          <span>Book Added Successfully</span>
+          <span>✓</span>
+          <span>Book Added Successfully!</span>
         </div>
       )}
     </div>

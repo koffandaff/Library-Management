@@ -5,6 +5,7 @@ const Register = ({ onRegister, onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userRole, setUserRole] = useState('user');
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -12,26 +13,71 @@ const Register = ({ onRegister, onNavigate }) => {
     confirmPassword: '',
     adminKey: ''
   });
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    } else if (formData.fullName.trim().length < 2) {
+      newErrors.fullName = 'Full name must be at least 2 characters';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+      newErrors.password = 'Password must contain uppercase, lowercase, and number';
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (userRole === 'admin' && !formData.adminKey.trim()) {
+      newErrors.adminKey = 'Admin key is required for admin registration';
+    } else if (userRole === 'admin' && formData.adminKey !== 'ADMIN123') {
+      newErrors.adminKey = 'Invalid admin key';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(userRole)
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+    
+    if (!validateForm()) {
       return;
     }
-    
-    // Validate admin key if admin role selected
-    // if (formData.role === 'admin' && formData.adminKey !== 'ADMIN123') {
-    //   alert('Invalid admin key!');
-    //   return;
-    // }
-    
-    console.log('Registration attempt:', { ...formData, userRole });
-    
-    if (onRegister) {
-      await onRegister(formData.fullName, formData.email, formData.confirmPassword, userRole, formData.adminKey)
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      await onRegister(
+        formData.fullName, 
+        formData.email, 
+        formData.password, 
+        userRole, 
+        formData.adminKey
+      );
+    } catch (err) {
+      setErrors({ 
+        submit: err.response?.data?.message || 'Registration failed. Please try again.' 
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,6 +87,13 @@ const Register = ({ onRegister, onNavigate }) => {
       ...prev,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const handleRoleChange = (role) => {
@@ -48,6 +101,7 @@ const Register = ({ onRegister, onNavigate }) => {
     // Clear admin key when switching to user role
     if (role === 'user') {
       setFormData(prev => ({ ...prev, adminKey: '' }));
+      setErrors(prev => ({ ...prev, adminKey: '' }));
     }
   };
 
@@ -67,54 +121,78 @@ const Register = ({ onRegister, onNavigate }) => {
       <div className="register-card">
         <div className="register-content">
           <div className="register-header">
-            <h1 className="register-title">Create an Account</h1>
-            <p className="register-subtitle">Join our library to manage and borrow books.</p>
+            <div className="register-icon">🌟</div>
+            <h1 className="register-title">Join Our Library</h1>
+            <p className="register-subtitle">Create your account to start exploring books</p>
           </div>
+
+          {/* Error Toast */}
+          {errors.submit && (
+            <div className="error-toast">
+              <span className="error-icon">⚠️</span>
+              <span className="error-message">{errors.submit}</span>
+            </div>
+          )}
           
           <form className="register-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="fullName" className="form-label">Full Name</label>
+              <label htmlFor="fullName" className="form-label">
+                <span className="label-icon">👤</span>
+                Full Name
+              </label>
               <input
                 id="fullName"
                 name="fullName"
                 type="text"
                 placeholder="e.g., Jane Doe"
-                className="form-input"
+                className={`form-input ${errors.fullName ? 'error' : ''}`}
                 value={formData.fullName}
                 onChange={handleInputChange}
                 required
               />
+              {errors.fullName && <span className="field-error">{errors.fullName}</span>}
             </div>
             
             <div className="form-group">
-              <label htmlFor="email" className="form-label">Email Address</label>
+              <label htmlFor="email" className="form-label">
+                <span className="label-icon">📧</span>
+                Email Address
+              </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 placeholder="e.g., jane.doe@example.com"
-                className="form-input"
+                className={`form-input ${errors.email ? 'error' : ''}`}
                 value={formData.email}
                 onChange={handleInputChange}
                 required
               />
+              {errors.email && <span className="field-error">{errors.email}</span>}
             </div>
 
             <div className="form-group">
-              <label className="form-label">Choose Role</label>
+              <label className="form-label">
+                <span className="label-icon">🎯</span>
+                Account Type
+              </label>
               <div className="role-selection">
-                <label className="role-option">
+                <label className={`role-option ${userRole === 'user' ? 'selected' : ''}`}>
                   <input
                     type="radio"
                     name="role"
-                    value='admin'
+                    value="user"
                     checked={userRole === 'user'}
-                    onChange={handleInputChange}
+                    onChange={() => handleRoleChange('user')}
                     className="role-radio"
                   />
-                  <span className="role-label">User</span>
+                  <span className="role-icon">👤</span>
+                  <div className="role-info">
+                    <span className="role-label">User</span>
+                    <span className="role-description">Borrow & read books</span>
+                  </div>
                 </label>
-                <label className="role-option">
+                <label className={`role-option ${userRole === 'admin' ? 'selected' : ''}`}>
                   <input
                     type="radio"
                     name="role"
@@ -123,20 +201,27 @@ const Register = ({ onRegister, onNavigate }) => {
                     onChange={() => handleRoleChange('admin')}
                     className="role-radio"
                   />
-                  <span className="role-label">Admin</span>
+                  <span className="role-icon">⚡</span>
+                  <div className="role-info">
+                    <span className="role-label">Admin</span>
+                    <span className="role-description">Manage library</span>
+                  </div>
                 </label>
               </div>
             </div>
             
             <div className="form-group">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password" className="form-label">
+                <span className="label-icon">🔒</span>
+                Password
+              </label>
               <div className="input-container">
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  className="form-input"
+                  placeholder="Create a strong password"
+                  className={`form-input ${errors.password ? 'error' : ''}`}
                   value={formData.password}
                   onChange={handleInputChange}
                   required
@@ -146,22 +231,24 @@ const Register = ({ onRegister, onNavigate }) => {
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <span className="material-symbols-outlined">
-                    {showPassword ? "don't show" : "show"}
-                  </span>
+                  {showPassword ? '🙈' : '👁️'}
                 </button>
               </div>
+              {errors.password && <span className="field-error">{errors.password}</span>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+              <label htmlFor="confirmPassword" className="form-label">
+                <span className="label-icon">✅</span>
+                Confirm Password
+              </label>
               <div className="input-container">
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  className="form-input"
+                  placeholder="Re-enter your password"
+                  className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
@@ -171,41 +258,60 @@ const Register = ({ onRegister, onNavigate }) => {
                   className="password-toggle"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  <span className="material-symbols-outlined">
-                    {showConfirmPassword ? "don't show" : "show"}
-                  </span>
+                  {showConfirmPassword ? '🙈' : '👁️'}
                 </button>
               </div>
+              {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
             </div>
 
             {userRole === 'admin' && (
               <div className="form-group">
-                <label htmlFor="adminKey" className="form-label">Admin Key</label>
+                <label htmlFor="adminKey" className="form-label">
+                  <span className="label-icon">🔑</span>
+                  Admin Key
+                </label>
                 <input
                   id="adminKey"
                   name="adminKey"
                   type="password"
                   placeholder="Enter admin key"
-                  className="form-input"
+                  className={`form-input ${errors.adminKey ? 'error' : ''}`}
                   value={formData.adminKey}
                   onChange={handleInputChange}
                   required
                 />
-                <small className="admin-key-hint">Use "ADMIN123" as admin key for testing</small>
+                {errors.adminKey ? (
+                  <span className="field-error">{errors.adminKey}</span>
+                ) : (
+                  <small className="admin-key-hint">Use "ADMIN123" as admin key for testing</small>
+                )}
               </div>
             )}
             
-            <button type="submit" className="register-button">
-              Create Account
+            <button 
+              type="submit" 
+              className={`register-button ${isLoading ? 'loading' : ''}`}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Creating Account...
+                </>
+              ) : (
+                <>
+                  <span className="btn-icon">🚀</span>
+                  Create Account
+                </>
+              )}
             </button>
           </form>
           
           <div className="login-redirect">
-            <p>Already have an account? 
-              <button onClick={handleLoginRedirect} className="login-link">
-                Log in
-              </button>
-            </p>
+            <p>Already have an account?</p>
+            <button onClick={handleLoginRedirect} className="login-link">
+              Sign In Here
+            </button>
           </div>
         </div>
       </div>
