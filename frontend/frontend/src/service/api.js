@@ -8,7 +8,7 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json'
     },
-    withCredentials: true // Add this globally for all requests
+    withCredentials: true
 });
 
 // Request interceptor to add auth token
@@ -31,20 +31,26 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If error is 401 and we haven't tried refreshing yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Don't try to refresh token for login requests or if no token exists
+    const isLoginRequest = originalRequest.url?.includes('/login');
+    const hasToken = localStorage.getItem('authToken');
+    
+    // If error is 401, we haven't tried refreshing yet, it's NOT a login request, and we have a token
+    if (error.response?.status === 401 && 
+        !originalRequest._retry && 
+        !isLoginRequest && 
+        hasToken) {
+      
       originalRequest._retry = true;
 
       try {
         console.log('Access token expired, attempting refresh...');
         
-        // Use the same axios instance with withCredentials
         const refreshResponse = await api.post('/users/refresh');
         
         const { accessToken } = refreshResponse.data;
         localStorage.setItem('authToken', accessToken);
         
-        // Update the authorization header
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         
         console.log('Token refreshed successfully, retrying original request...');
@@ -56,7 +62,7 @@ api.interceptors.response.use(
         // Clear everything on refresh failure
         localStorage.removeItem('authToken');
         
-        // Redirect to login
+        // Redirect to login only if we're not already there
         if (!window.location.href.includes('/login')) {
           window.location.href = '/#login';
         }
@@ -65,14 +71,7 @@ api.interceptors.response.use(
       }
     }
 
-    // Handle other 401 errors
-    if (error.response?.status === 401) {
-      localStorage.removeItem('authToken');
-      if (!window.location.href.includes('/login')) {
-        window.location.href = '/#login';
-      }
-    }
-
+    // For login 401 errors or other 401 errors without token, just reject normally
     return Promise.reject(error);
   }
 );
@@ -82,7 +81,12 @@ export const Api_Endpoints = {
         LOGIN: '/users/login',
         REGISTER: '/users/register',
         REFRESH: '/users/refresh',
-        CURRENT: '/users/current' 
+        CURRENT: '/users/current',
+        FORGOT_PASSWORD: '/users/forgot-password',
+        VERIFY_OTP: '/users/verify-otp',
+        RESET_PASSWORD: '/users/reset-password',
+        RESEND_OTP: '/users/resend-otp',
+        LOGOUT: '/users/logout'
     },
     BOOKS: {
         GET_ALLBOOKS: '/book',

@@ -154,7 +154,7 @@ const Login = ({ onLogin, onNavigate }) => {
                 <span className="checkbox-custom"></span>
                 <span className="checkbox-text">Remember Me</span>
               </label>
-              <button type="button" className="forgot-link">Forgot Password?</button>
+              <button type="button" onClick={() => onNavigate('forgot-password')} className="forgot-link">Forgot Password?</button>
             </div>
             
             <button 
@@ -189,4 +189,4 @@ const Login = ({ onLogin, onNavigate }) => {
   );
 };
 
-export default Login;
+export default Login; 

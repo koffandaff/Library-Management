@@ -7,7 +7,7 @@ const validateToken = (req,res,next) => {
     
     if(!token){
         return res.status(401).json({message: 'Access Token Missing'})
-    }
+    } 
 
     try {
         const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "Dhruvil12345");

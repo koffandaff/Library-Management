@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-    
     name: {
         type: String,
         required: true
@@ -23,9 +22,16 @@ const UserSchema = new mongoose.Schema({
     refreshToken: {
         type: String,
         default: null
+    },
+    // OTP fields
+    resetOtp: {
+        type: String,
+        default: null
+    },
+    resetOtpExpires: {
+        type: Date,
+        default: null
     }
-    
-    
-}, {timestamps: true})
+}, {timestamps: true});
 
 module.exports = mongoose.model('User', UserSchema, 'users');

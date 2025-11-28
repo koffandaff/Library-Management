@@ -17,6 +17,9 @@ import CheckoutHistory from './pages/CheckoutHistory';
 import AdminDashboard from './pages/AdminDashboard';
 import PersonalCheckoutHistory from './pages/PersonalCheckoutHistory';
 import EditBook from './pages/EditBook';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyOtp from './pages/VerifyOtp';
+import ResetPassword from './pages/ResetPassword';
 
 import api, { Api_Endpoints } from './service/api';
 import './App.css';
@@ -42,7 +45,7 @@ function App() {
   const navigateTo = (page, params = {}) => {
     console.log(`Navigating to: ${page}`, params);
     
-    const publicPages = ['home', 'login', 'register'];
+    const publicPages = ['home', 'login', 'register','forgot-password','verify-otp','reset-password'];
     const adminPages = ['admin-dashboard', 'add-book', 'edit-book', 'checkout-history', 'author-update', 'author-delete', 'add-author'];
     
     if (!publicPages.includes(page) && !isLoggedIn) {
@@ -165,6 +168,12 @@ function App() {
         return <Login onLogin={handleLogin} onNavigate={navigateTo} />;
       case 'register':
         return <Register onRegister={handleRegister} onNavigate={navigateTo} />;
+      case 'forgot-password':
+        return <ForgotPassword onNavigate={navigateTo} />;
+      case 'verify-otp':
+        return <VerifyOtp onNavigate={navigateTo} pageParams={pageParams} />;
+      case 'reset-password':
+        return <ResetPassword onNavigate={navigateTo} pageParams={pageParams} />;
       case 'books':
         return (
           <ProtectedRoute>
