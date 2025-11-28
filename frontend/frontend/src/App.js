@@ -26,58 +26,30 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState('user');
   const [pageParams, setPageParams] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start as false
 
   useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  // Check authentication status on app load
-  const checkAuthStatus = async () => {
+    // Simple auth check - don't call API on app load to avoid token refresh loops
     const token = localStorage.getItem('authToken');
     if (token) {
-      try {
-        const response = await api.get(Api_Endpoints.AUTH.CURRENT);
-        console.log('Auth check response:', response.data);
-        
-        let userRoleFromResponse = 'user';
-        
-        if (response.data.user && response.data.user.user && response.data.user.user.role) {
-          userRoleFromResponse = response.data.user.user.role;
-        } else if (response.data.user && response.data.user.role) {
-          userRoleFromResponse = response.data.user.role;
-        }
-        
-        setIsLoggedIn(true); 
-        setUserRole(userRoleFromResponse);
-        
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        // Clear token only if it's not a 401 (token refresh will handle 401)
-        if (error.response?.status !== 401) {
-          localStorage.removeItem('authToken');
-          setIsLoggedIn(false);
-          setUserRole('user');
-        }
-      }
+      setIsLoggedIn(true);
+      // You can decode the token to get role if needed, but don't call API
     }
     setLoading(false);
-  };
+  }, []);
 
-  // Navigation function with access control
+  // Navigation function
   const navigateTo = (page, params = {}) => {
     console.log(`Navigating to: ${page}`, params);
     
     const publicPages = ['home', 'login', 'register'];
     const adminPages = ['admin-dashboard', 'add-book', 'edit-book', 'checkout-history', 'author-update', 'author-delete', 'add-author'];
     
-    // Redirect to login if trying to access protected page without authentication
     if (!publicPages.includes(page) && !isLoggedIn) {
       setCurrentPage('login');
       return;
     }
     
-    // Redirect to home if non-admin tries to access admin pages
     if (adminPages.includes(page) && userRole !== 'admin') {
       setCurrentPage('home');
       alert('Access denied. Admin privileges required.');
@@ -98,24 +70,12 @@ function App() {
 
       const { accessToken, user } = response.data;
       
-      // Store access token and update auth state
       localStorage.setItem('authToken', accessToken);
       setIsLoggedIn(true);
-      
-      // Extract user role from response
-      let userRoleFromResponse = 'user';
-      if (user && user.user && user.user.role) {
-        userRoleFromResponse = user.user.role;
-      } else if (user && user.role) {
-        userRoleFromResponse = user.role;
-      } else if (typeof user === 'string') {
-        userRoleFromResponse = user.toLowerCase().includes('admin') ? 'admin' : 'user';
-      }
-      
-      setUserRole(userRoleFromResponse);
+      setUserRole(user.role || 'user');
       setCurrentPage('home');
       
-      console.log('Login successful, role:', userRoleFromResponse);
+      console.log('Login successful, role:', user.role);
 
     } catch (err) {
       console.log('Login failed:', err.response?.data || err.message);
@@ -127,7 +87,7 @@ function App() {
   // Handle user registration
   const handleRegister = async (name, email, password, role, adminkey) => {
     try {
-      const response = await api.post(Api_Endpoints.AUTH.REGISTER, {
+      await api.post(Api_Endpoints.AUTH.REGISTER, {
         name,
         email,
         password,
@@ -135,12 +95,9 @@ function App() {
         adminkey,
       });
 
-      // SUCCESS: Show message and redirect to login instead of auto-login
       alert('Registration successful! Please log in with your credentials.');
-      setCurrentPage('login'); // Redirect to login page
+      setCurrentPage('login');
       
-      console.log('Registration successful, please log in');
-
     } catch (err) {
       console.log('Registration failed:', err.response?.data || err.message);
       const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
@@ -148,31 +105,25 @@ function App() {
     }
   };
 
-  // Handle user logout with CORS error handling
+  // Handle user logout
   const handleLogout = async () => {
     try {
-      // Try to call logout endpoint to clear server-side refresh token
-      // Use timeout to prevent hanging on CORS issues
       await api.post(Api_Endpoints.AUTH.LOGOUT, {}, { 
         withCredentials: true,
-        timeout: 3000 // 3 second timeout
+        timeout: 3000
       });
-      console.log('Logout API call successful');
     } catch (err) {
-      console.log('Logout API call had issues (but continuing):', err.message);
-      // Continue with client-side logout even if API call fails
+      console.log('Logout API call had issues:', err.message);
     } finally {
-      // Always clear client-side tokens regardless of server response
       localStorage.removeItem('authToken');
       setIsLoggedIn(false);
       setUserRole('user');
       setCurrentPage('home');
-      
-      console.log('User logged out successfully (client-side)');
+      console.log('User logged out successfully');
     }
   };
 
-  // Protected route component for access control
+  // Protected route component
   const ProtectedRoute = ({ children, requireAdmin = false }) => {
     if (!isLoggedIn) {
       return (

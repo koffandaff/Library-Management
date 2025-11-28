@@ -7,7 +7,8 @@ const api = axios.create({
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json'
-    }
+    },
+    withCredentials: true // Add this globally for all requests
 });
 
 // Request interceptor to add auth token
@@ -30,39 +31,32 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If error is 401 (Unauthorized) and we haven't tried refreshing yet
+    // If error is 401 and we haven't tried refreshing yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         console.log('Access token expired, attempting refresh...');
         
-        const refreshResponse = await axios.post(
-          `${baseUrl}/users/refresh`,
-          {},
-          { 
-            withCredentials: true // Important for httpOnly cookies
-          }
-        );
-
+        // Use the same axios instance with withCredentials
+        const refreshResponse = await api.post('/users/refresh');
+        
         const { accessToken } = refreshResponse.data;
         localStorage.setItem('authToken', accessToken);
         
-        // Update the authorization header for the retry
+        // Update the authorization header
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         
         console.log('Token refreshed successfully, retrying original request...');
-        
-        // Retry the original request with new token
         return api(originalRequest);
         
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
+        console.error('Token refresh failed:', refreshError.response?.data || refreshError.message);
         
-        // Refresh failed - clear tokens and redirect to login
+        // Clear everything on refresh failure
         localStorage.removeItem('authToken');
         
-        // Only redirect if we're not already on login page
+        // Redirect to login
         if (!window.location.href.includes('/login')) {
           window.location.href = '/#login';
         }
@@ -71,7 +65,7 @@ api.interceptors.response.use(
       }
     }
 
-    // Handle other 401 errors (not token expiration)
+    // Handle other 401 errors
     if (error.response?.status === 401) {
       localStorage.removeItem('authToken');
       if (!window.location.href.includes('/login')) {
