@@ -7,7 +7,7 @@
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: 'Inter', sans-serif;
-  padding: 2rem 1rem;
+  padding: 1rem;
   overflow: hidden;
 }
 
@@ -26,37 +26,37 @@
 }
 
 .bg-blob-1 {
-  width: 30rem;
-  height: 30rem;
-  top: -10rem;
-  left: -10rem;
+  width: 20rem;
+  height: 20rem;
+  top: -5rem;
+  left: -5rem;
   animation-delay: 0s;
 }
 
 .bg-blob-2 {
-  width: 25rem;
-  height: 25rem;
-  bottom: -8rem;
-  right: -8rem;
+  width: 15rem;
+  height: 15rem;
+  bottom: -4rem;
+  right: -4rem;
   animation-delay: 4s;
 }
 
 @keyframes float {
   0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
-  33% { transform: translate(30px, -20px) rotate(120deg); }
-  66% { transform: translate(-20px, 15px) rotate(240deg); }
+  33% { transform: translate(20px, -15px) rotate(120deg); }
+  66% { transform: translate(-15px, 10px) rotate(240deg); }
 }
 
 .register-card {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 32rem;
+  max-width: 28rem;
   border-radius: 1.5rem;
   background: rgba(255, 255, 255, 0.95);
-  padding: 3rem 2.5rem;
+  padding: 2rem 1.5rem;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 20px 40px -12px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(2rem);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -66,26 +66,26 @@
 .register-card:hover {
   transform: translateY(-5px);
   box-shadow: 
-    0 35px 60px -12px rgba(0, 0, 0, 0.3),
+    0 30px 50px -12px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .register-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .register-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   text-align: center;
 }
 
 .register-icon {
-  font-size: 3rem;
+  font-size: 2.5rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -94,7 +94,7 @@
 }
 
 .register-title {
-  font-size: 2.25rem;
+  font-size: 1.75rem;
   font-weight: 900;
   color: #1e293b;
   margin: 0;
@@ -102,12 +102,13 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1.2;
 }
 
 .register-subtitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.5;
   color: #64748b;
   margin: 0;
 }
@@ -117,15 +118,16 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem 1.5rem;
+  padding: 0.875rem 1.25rem;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 1rem;
+  border-radius: 0.875rem;
   color: #dc2626;
   font-weight: 600;
   width: 100%;
   backdrop-filter: blur(1rem);
   animation: slideDown 0.3s ease-out;
+  font-size: 0.9rem;
 }
 
 @keyframes slideDown {
@@ -140,23 +142,23 @@
 }
 
 .error-icon {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .form-label {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #374151;
   display: flex;
@@ -165,21 +167,21 @@
 }
 
 .label-icon {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .form-input {
-  height: 3.5rem;
+  height: 3rem;
   width: 100%;
-  border-radius: 1rem;
-  padding: 0 1.25rem;
-  font-size: 1rem;
+  border-radius: 0.875rem;
+  padding: 0 1rem;
+  font-size: 0.95rem;
   font-weight: 400;
   color: #1f2937;
   background: rgba(255, 255, 255, 0.8);
   border: 2px solid rgba(226, 232, 240, 0.8);
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }
 
@@ -189,12 +191,13 @@
   border-color: #667eea;
   box-shadow: 
     0 0 0 3px rgba(102, 126, 234, 0.2),
-    0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+    0 6px 12px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 .form-input::placeholder {
   color: #9ca3af;
+  font-size: 0.9rem;
 }
 
 .form-input.error {
@@ -219,46 +222,53 @@
   border: none;
   color: #6b7280;
   cursor: pointer;
-  padding: 0;
-  font-size: 1.25rem;
+  padding: 0.25rem;
+  font-size: 1.1rem;
   transition: all 0.2s ease;
+  border-radius: 0.25rem;
+  min-height: 2rem;
+  min-width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .password-toggle:hover {
   color: #667eea;
-  transform: scale(1.1);
+  background: rgba(102, 126, 234, 0.1);
 }
 
 .field-error {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: #ef4444;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  line-height: 1.3;
 }
 
 .field-error::before {
   content: '⚠️';
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
 /* Role Selection */
 .role-selection {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
   margin-top: 0.25rem;
 }
 
 .role-option {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   cursor: pointer;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
   border: 2px solid #e5e7eb;
-  border-radius: 1rem;
+  border-radius: 0.875rem;
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(1rem);
@@ -266,14 +276,14 @@
 
 .role-option:hover {
   border-color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px -8px rgba(102, 126, 234, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -6px rgba(102, 126, 234, 0.2);
 }
 
 .role-option.selected {
   border-color: #667eea;
   background: rgba(102, 126, 234, 0.1);
-  box-shadow: 0 8px 25px -8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 20px -6px rgba(102, 126, 234, 0.3);
 }
 
 .role-radio {
@@ -281,59 +291,65 @@
 }
 
 .role-icon {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  flex-shrink: 0;
 }
 
 .role-info {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem;
+  flex: 1;
 }
 
 .role-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #1f2937;
+  line-height: 1.2;
 }
 
 .role-description {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #6b7280;
   font-weight: 500;
+  line-height: 1.3;
 }
 
 .admin-key-hint {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #6b7280;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   display: block;
   font-style: italic;
+  line-height: 1.3;
 }
 
 .register-button {
-  height: 3.5rem;
+  height: 3rem;
   width: 100%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  border-radius: 1rem;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 700;
   color: white;
   letter-spacing: 0.025em;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 25px -8px rgba(102, 126, 234, 0.4);
-  margin-top: 1rem;
+  box-shadow: 0 6px 20px -6px rgba(102, 126, 234, 0.4);
+  margin-top: 0.5rem;
+  min-height: 3rem;
 }
 
 .register-button::before {
@@ -348,9 +364,9 @@
 }
 
 .register-button:hover:not(.loading) {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: 
-    0 20px 40px -10px rgba(102, 126, 234, 0.6),
+    0 12px 30px -8px rgba(102, 126, 234, 0.6),
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -361,11 +377,13 @@
 .register-button.loading {
   background: #9ca3af;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.2);
 }
 
 .loading-spinner {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
   border: 2px solid transparent;
   border-top: 2px solid white;
   border-radius: 50%;
@@ -378,25 +396,26 @@
 }
 
 .btn-icon {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   transition: transform 0.3s ease;
 }
 
 .register-button:hover .btn-icon {
-  transform: scale(1.2) rotate(5deg);
+  transform: scale(1.1) rotate(5deg);
 }
 
 .login-redirect {
   text-align: center;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .login-redirect p {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #64748b;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
 }
 
 .login-link {
@@ -405,27 +424,32 @@
   font-weight: 700;
   color: #667eea;
   cursor: pointer;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.625rem;
   transition: all 0.3s ease;
   border: 2px solid #667eea;
+  font-size: 0.9rem;
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-link:hover {
   background: #667eea;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px -5px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -4px rgba(102, 126, 234, 0.4);
 }
 
-/* Responsive design */
-@media (max-width: 640px) {
+/* Tablet and larger mobile screens */
+@media (min-width: 480px) {
   .register-container {
-    padding: 1rem;
+    padding: 1.5rem;
   }
   
   .register-card {
-    padding: 2rem 1.5rem;
+    padding: 2.5rem 2rem;
   }
   
   .register-title {
@@ -433,11 +457,174 @@
   }
   
   .role-selection {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Desktop screens */
+@media (min-width: 768px) {
+  .register-container {
+    padding: 2rem;
+  }
+  
+  .register-card {
+    padding: 3rem 2.5rem;
+    max-width: 32rem;
+  }
+  
+  .register-content {
+    gap: 2rem;
+  }
+  
+  .register-header {
+    gap: 1rem;
+  }
+  
+  .register-icon {
+    font-size: 3rem;
+  }
+  
+  .register-title {
+    font-size: 2.25rem;
+  }
+  
+  .register-subtitle {
+    font-size: 1.125rem;
+  }
+  
+  .register-form {
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    gap: 0.75rem;
+  }
+  
+  .form-input {
+    height: 3.5rem;
+    padding: 0 1.25rem;
+    font-size: 1rem;
+  }
+  
+  .register-button {
+    height: 3.5rem;
+    font-size: 1.125rem;
+  }
+  
+  .bg-blob-1 {
+    width: 30rem;
+    height: 30rem;
+    top: -10rem;
+    left: -10rem;
+  }
+  
+  .bg-blob-2 {
+    width: 25rem;
+    height: 25rem;
+    bottom: -8rem;
+    right: -8rem;
+  }
+}
+
+/* Large desktop screens */
+@media (min-width: 1024px) {
+  .register-container {
+    padding: 3rem;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 360px) {
+  .register-container {
+    padding: 0.75rem;
+  }
+  
+  .register-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 1.25rem;
+  }
+  
+  .register-title {
+    font-size: 1.5rem;
+  }
+  
+  .register-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .form-input {
+    height: 2.75rem;
+    border-radius: 0.75rem;
   }
   
   .role-option {
+    padding: 0.875rem 1rem;
+  }
+  
+  .register-button {
+    height: 2.75rem;
+    border-radius: 0.75rem;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+  .register-container {
     padding: 1rem;
+    align-items: flex-start;
+    min-height: auto;
+  }
+  
+  .register-card {
+    margin: 1rem 0;
+    max-width: 90%;
+  }
+  
+  .register-content {
+    gap: 1rem;
+  }
+  
+  .register-header {
+    gap: 0.5rem;
+  }
+  
+  .register-icon {
+    font-size: 2rem;
+  }
+  
+  .register-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .password-toggle,
+  .login-link,
+  .register-button {
+    min-height: 44px;
+  }
+  
+  .role-option {
+    min-height: 60px;
+  }
+  
+  .form-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob,
+  .register-card,
+  .form-input,
+  .register-button,
+  .login-link,
+  .role-option,
+  .password-toggle {
+    animation: none;
+    transition: none;
   }
 }
 

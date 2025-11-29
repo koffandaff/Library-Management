@@ -34,8 +34,6 @@ const Register = ({ onRegister, onNavigate }) => {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and number';
     }
 
     if (!formData.confirmPassword) {
@@ -134,7 +132,7 @@ const Register = ({ onRegister, onNavigate }) => {
             </div>
           )}
           
-          <form className="register-form" onSubmit={handleSubmit}>
+          <form className="register-form" onSubmit={handleSubmit} noValidate>
             <div className="form-group">
               <label htmlFor="fullName" className="form-label">
                 <span className="label-icon">👤</span>
@@ -149,6 +147,7 @@ const Register = ({ onRegister, onNavigate }) => {
                 value={formData.fullName}
                 onChange={handleInputChange}
                 required
+                disabled={isLoading}
               />
               {errors.fullName && <span className="field-error">{errors.fullName}</span>}
             </div>
@@ -167,6 +166,7 @@ const Register = ({ onRegister, onNavigate }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
+                disabled={isLoading}
               />
               {errors.email && <span className="field-error">{errors.email}</span>}
             </div>
@@ -185,6 +185,7 @@ const Register = ({ onRegister, onNavigate }) => {
                     checked={userRole === 'user'}
                     onChange={() => handleRoleChange('user')}
                     className="role-radio"
+                    disabled={isLoading}
                   />
                   <span className="role-icon">👤</span>
                   <div className="role-info">
@@ -200,6 +201,7 @@ const Register = ({ onRegister, onNavigate }) => {
                     checked={userRole === 'admin'}
                     onChange={() => handleRoleChange('admin')}
                     className="role-radio"
+                    disabled={isLoading}
                   />
                   <span className="role-icon">⚡</span>
                   <div className="role-info">
@@ -225,11 +227,14 @@ const Register = ({ onRegister, onNavigate }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
+                  disabled={isLoading}
                 />
                 <button 
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? '🙈' : '👁️'}
                 </button>
@@ -252,11 +257,14 @@ const Register = ({ onRegister, onNavigate }) => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
+                  disabled={isLoading}
                 />
                 <button 
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={isLoading}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                 >
                   {showConfirmPassword ? '🙈' : '👁️'}
                 </button>
@@ -278,7 +286,8 @@ const Register = ({ onRegister, onNavigate }) => {
                   className={`form-input ${errors.adminKey ? 'error' : ''}`}
                   value={formData.adminKey}
                   onChange={handleInputChange}
-                  required
+                  required={userRole === 'admin'}
+                  disabled={isLoading}
                 />
                 {errors.adminKey ? (
                   <span className="field-error">{errors.adminKey}</span>
@@ -309,7 +318,11 @@ const Register = ({ onRegister, onNavigate }) => {
           
           <div className="login-redirect">
             <p>Already have an account?</p>
-            <button onClick={handleLoginRedirect} className="login-link">
+            <button 
+              onClick={handleLoginRedirect} 
+              className="login-link"
+              disabled={isLoading}
+            >
               Sign In Here
             </button>
           </div>
