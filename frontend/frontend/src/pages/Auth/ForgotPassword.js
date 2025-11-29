@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './ForgotPassword.css';
-import api, { Api_Endpoints } from '../service/api';
+import './styles/ForgotPassword.css';
+import api, { Api_Endpoints } from '../../service/api';
 
 const ForgotPassword = ({ onNavigate }) => {
   const [email, setEmail] = useState('');

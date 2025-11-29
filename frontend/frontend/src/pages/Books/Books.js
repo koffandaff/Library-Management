@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api, { Api_Endpoints } from '../service/api'
-import './Books.css';
+import api, { Api_Endpoints } from '../../service/api'
+import './styles/Books.css';
 
 const Books = ({ onNavigate, isLoggedIn, userRole }) => {
   const [books, setBooks] = useState([]);

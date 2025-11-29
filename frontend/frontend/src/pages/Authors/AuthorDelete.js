@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './AuthorDelete.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/AuthorDelete.css';
 
 const AuthorDelete = ({ onNavigate, authorId }) => {
   const [author, setAuthor] = useState(null);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './AddBook.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/AddBook.css';
 
 const AddBook = ({ onNavigate }) => {
   const [formData, setFormData] = useState({

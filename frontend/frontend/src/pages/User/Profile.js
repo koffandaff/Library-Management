@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './Profile.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/Profile.css';
 
 const Profile = ({ onNavigate, isLoggedIn, userRole }) => {
   const [userData, setUserData] = useState(null);

@@ -11,6 +11,22 @@ const api = axios.create({
     withCredentials: true
 });
 
+// Refresh token locking mechanism
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
@@ -41,7 +57,20 @@ api.interceptors.response.use(
         !isLoginRequest && 
         hasToken) {
       
+      // If already refreshing, add to queue
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        }).catch(err => {
+          return Promise.reject(err);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         console.log('Access token expired, attempting refresh...');
@@ -51,13 +80,18 @@ api.interceptors.response.use(
         const { accessToken } = refreshResponse.data;
         localStorage.setItem('authToken', accessToken);
         
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        // Process all queued requests with new token
+        processQueue(null, accessToken);
         
         console.log('Token refreshed successfully, retrying original request...');
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
         
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError.response?.data || refreshError.message);
+        
+        // Process all queued requests with error
+        processQueue(refreshError, null);
         
         // Clear everything on refresh failure
         localStorage.removeItem('authToken');
@@ -68,6 +102,8 @@ api.interceptors.response.use(
         }
         
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 

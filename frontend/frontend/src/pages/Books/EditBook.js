@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './EditBook.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/EditBook.css';
 
 const EditBook = ({ onNavigate , bookId}) => {
   const [formData, setFormData] = useState({

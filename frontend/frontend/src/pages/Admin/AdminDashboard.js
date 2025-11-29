@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './AdminDashboard.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/AdminDashboard.css';
 
 const AdminDashboard = ({ onNavigate }) => {
   const [stats, setStats] = useState({
@@ -25,16 +25,16 @@ const AdminDashboard = ({ onNavigate }) => {
       const [booksResponse, checkoutsResponse, usersResponse] = await Promise.all([
         api.get(Api_Endpoints.BOOKS.GET_ALLBOOKS),
         api.get(Api_Endpoints.CHECKOUT.ALL_HISTORY),
-        api.get(Api_Endpoints.USER.GET_ALL) // Get actual users count
+        api.get(Api_Endpoints.USER.GET_ALL)
       ]);
 
       const books = booksResponse.data || [];
       
-      // FIX: Handle both response formats for checkouts
+      // Handle both response formats for checkouts
       const allCheckouts = checkoutsResponse.data?.data || checkoutsResponse.data?.allrecords || [];
       const activeCheckouts = allCheckouts.filter(checkout => !checkout.returnDate);
 
-      // FIX: Get actual users count from users API
+      // Get actual users count from users API
       const allUsers = usersResponse.data?.users || [];
       
       console.log('Dashboard data:', {
@@ -49,7 +49,7 @@ const AdminDashboard = ({ onNavigate }) => {
         totalAuthors: new Set(books.map(book => book.authorname).filter(Boolean)).size,
         activeCheckouts: activeCheckouts.length,
         totalCheckouts: allCheckouts.length,
-        totalUsers: allUsers.length // Use actual users count
+        totalUsers: allUsers.length
       });
 
       // Get recent checkouts for activity feed
@@ -66,7 +66,6 @@ const AdminDashboard = ({ onNavigate }) => {
     }
   };
 
-  // ... rest of your AdminDashboard component remains the same
   const handleMenuClick = (route) => {
     if (onNavigate && route) {
       onNavigate(route);
@@ -89,34 +88,60 @@ const AdminDashboard = ({ onNavigate }) => {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="admin-dashboard-container">
-        <div className="loading-state">
-          <div className="loading-spinner">📊</div>
-          <p>Loading dashboard...</p>
+  // Loading Component
+  const LoadingState = () => (
+    <div className="loading-state">
+      <div className="spinner-container">
+        <div className="loading-spinner"></div>
+        <div className="spinner-dots">
+          <div className="spinner-dot"></div>
+          <div className="spinner-dot"></div>
+          <div className="spinner-dot"></div>
+          <div className="spinner-dot"></div>
         </div>
       </div>
-    );
+      <div className="loading-text">
+        <h3>Loading Dashboard</h3>
+        <p>Preparing your library insights...</p>
+        <div className="loading-progress"></div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return <LoadingState />;
   }
 
   return (
     <div className="admin-dashboard-container">
+      {/* Background Blobs */}
+      <div className="dashboard-background">
+        <div className="bg-blob bg-blob-1"></div>
+        <div className="bg-blob bg-blob-2"></div>
+      </div>
+
       <div className="admin-content">
         {/* Breadcrumbs */}
         <div className="breadcrumbs">
-          <button className="breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+          <button className="breadcrumb-link" onClick={() => onNavigate('home')}>
+            Home
+          </button>
           <span className="breadcrumb-separator">/</span>
           <span className="breadcrumb-current">Admin Dashboard</span>
         </div>
 
+        {/* Page Header */}
         <div className="page-header">
           <div className="header-content">
             <h1>Admin Dashboard</h1>
-            
-            
+            <br></br>
+            <p></p>
           </div>
-          
+          <br></br>
+          <button className="add-book-btn" onClick={handleAddBook}>
+            <span className="btn-icon">+</span>
+            Add New Book
+          </button>
         </div>
 
         {/* Stats Grid */}
@@ -126,8 +151,8 @@ const AdminDashboard = ({ onNavigate }) => {
               <span className="icon">📚</span>
             </div>
             <div className="stat-content">
-              <h3 className="stat-value">{stats.totalBooks}</h3>
-              <p className="stat-label">Total Books</p>
+              <h3>{stats.totalBooks}</h3>
+              <p>Total Books</p>
             </div>
           </div>
 
@@ -136,8 +161,8 @@ const AdminDashboard = ({ onNavigate }) => {
               <span className="icon">✍️</span>
             </div>
             <div className="stat-content">
-              <h3 className="stat-value">{stats.totalAuthors}</h3>
-              <p className="stat-label">Total Authors</p>
+              <h3>{stats.totalAuthors}</h3>
+              <p>Total Authors</p>
             </div>
           </div>
 
@@ -146,8 +171,8 @@ const AdminDashboard = ({ onNavigate }) => {
               <span className="icon">👥</span>
             </div>
             <div className="stat-content">
-              <h3 className="stat-value">{stats.totalUsers}</h3>
-              <p className="stat-label">Total Users</p>
+              <h3>{stats.totalUsers}</h3>
+              <p>Total Users</p>
             </div>
           </div>
 
@@ -156,12 +181,13 @@ const AdminDashboard = ({ onNavigate }) => {
               <span className="icon">📖</span>
             </div>
             <div className="stat-content">
-              <h3 className="stat-value">{stats.activeCheckouts}</h3>
-              <p className="stat-label">Active Checkouts</p>
+              <h3>{stats.activeCheckouts}</h3>
+              <p>Active Checkouts</p>
             </div>
           </div>
         </div>
 
+        {/* Main Dashboard Grid */}
         <div className="dashboard-grid">
           {/* Quick Actions */}
           <div className="dashboard-card quick-actions-card">
@@ -192,10 +218,10 @@ const AdminDashboard = ({ onNavigate }) => {
               </button>
               <button 
                 className="action-btn" 
-                onClick={handleAddBook}
+                onClick={() => handleMenuClick('users')}
               >
-                <span className="btn-icon">➕</span>
-                <span>Add New Book</span>
+                <span className="btn-icon">👥</span>
+                <span>Manage Users</span>
               </button>
             </div>
           </div>
@@ -208,13 +234,13 @@ const AdminDashboard = ({ onNavigate }) => {
             <div className="activity-list">
               {recentActivity.length > 0 ? (
                 recentActivity.map((activity, index) => (
-                  <div key={index} className="activity-item">
+                  <div key={`${activity._id || index}`} className="activity-item">
                     <div className="activity-icon">
                       {activity.returnDate ? '↩️' : '📖'}
                     </div>
                     <div className="activity-content">
                       <p className="activity-text">
-                        <strong>{activity.user}</strong> {activity.returnDate ? 'returned' : 'checked out'} "{activity.book}"
+                        <strong>{activity.user || 'Unknown User'}</strong> {activity.returnDate ? 'returned' : 'checked out'} "{activity.book || 'Unknown Book'}"
                       </p>
                       <span className="activity-time">
                         {formatDate(activity.returnDate || activity.checkoutDate)}
@@ -251,6 +277,15 @@ const AdminDashboard = ({ onNavigate }) => {
                 {stats.totalCheckouts > 0 
                   ? `${Math.round(((stats.totalCheckouts - stats.activeCheckouts) / stats.totalCheckouts) * 100)}%`
                   : '0%'
+                }
+              </span>
+            </div>
+            <div className="overview-item">
+              <span className="overview-label">Books per User</span>
+              <span className="overview-value">
+                {stats.totalUsers > 0 
+                  ? (stats.totalBooks / stats.totalUsers).toFixed(1)
+                  : '0.0'
                 }
               </span>
             </div>

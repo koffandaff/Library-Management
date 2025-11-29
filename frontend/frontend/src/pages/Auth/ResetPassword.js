@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './ResetPassword.css';
-import api, { Api_Endpoints } from '../service/api';
+import './styles/ResetPassword.css';
+import api, { Api_Endpoints } from '../../service/api';
 
 const ResetPassword = ({ onNavigate, pageParams }) => {
   const [newPassword, setNewPassword] = useState('');

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import api from '../service/api';
-import './AddAuthor.css';
+import api from '../../service/api';
+import './styles/AddAuthor.css';
 
 const AddAuthor = ({ onNavigate }) => {
   const [formData, setFormData] = useState({

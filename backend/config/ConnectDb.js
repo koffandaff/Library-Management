@@ -4,7 +4,7 @@ const mongoose = require("mongoose") // import mongoose for better communication
 
 const connectDb =async () => {
     try {
-        const connect = await mongoose.connect('mongodb+srv://dhruvillearning_db_user:Dhruvil123@librarydatabse.y4yg33a.mongodb.net/?appName=LibraryDatabse')
+        const connect = await mongoose.connect(process.env.MONGO_URI)
         console.log("Connection Established: ", 
             connect.connection.host, // host name 
             connect.connection.name // database name 

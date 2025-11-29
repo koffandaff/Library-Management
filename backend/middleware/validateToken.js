@@ -10,7 +10,7 @@ const validateToken = (req,res,next) => {
     } 
 
     try {
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "Dhruvil12345");
+        const user = jwt.verify(token, process.env.AT_KEY);
         
         // FIX: Keep the structure consistent - either use req.user OR req.user.user
         // Since your controllers expect req.user.user, keep it that way

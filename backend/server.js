@@ -2,6 +2,7 @@ const express = require('express');
 const connectDb = require('./config/ConnectDb');
 const cors = require('cors');
 const cookieparser = require('cookie-parser')
+require('dotenv').config();
 
 const allowedOrigins = [
     '*',
@@ -16,7 +17,7 @@ const corsOptions = {
 };
 
 const app = express();
-const PORT = 3000; // not using env variables for simplicity
+const PORT = process.env.PORT; // not using env variables for simplicity
 app.use(cookieparser())
 app.use(express.json()); // Middleware to parse JSON bodies
 

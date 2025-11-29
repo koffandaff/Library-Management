@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../service/api';
-import './Authors.css';
+import api from '../../service/api';
+import './styles/Authors.css';
 
 const Authors = ({ onNavigate, isAdmin = false }) => {
   const [authors, setAuthors] = useState([]);

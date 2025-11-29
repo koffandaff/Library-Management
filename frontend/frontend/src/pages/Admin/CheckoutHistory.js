@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './CheckoutHistory.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/CheckoutHistory.css';
 
 const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
   const [checkouts, setCheckouts] = useState([]);
@@ -99,7 +99,7 @@ const CheckoutHistory = ({ onNavigate, userRole = 'admin' }) => {
 
         <div className="filters-section">
           <div className="search-container">
-            <span className="material-symbols-outlined search-icon">search</span>
+            <span className="material-symbols-outlined search-icon"></span>
             <input
               type="text"
               placeholder="Search by book name or user..."

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './BookDetails.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/BookDetails.css';
 
 const BookDetails = ({ onNavigate, isAdmin = false, bookId }) => {
   const [book, setBook] = useState(null);

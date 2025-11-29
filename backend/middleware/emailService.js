@@ -5,8 +5,8 @@ const createTransporter = () => {
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'dhruvillearning@gmail.com',
-      pass: 'iufc hfmz mhga nvlm'
+      user: process.env.mail,
+      pass: process.env.pass
     }
   });
 };

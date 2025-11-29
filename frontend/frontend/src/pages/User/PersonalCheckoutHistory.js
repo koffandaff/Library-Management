@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './PersonalCheckoutHistory.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/PersonalCheckoutHistory.css';
 
 const PersonalCheckoutHistory = ({ onNavigate }) => {
   const [checkouts, setCheckouts] = useState([]);

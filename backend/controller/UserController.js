@@ -33,8 +33,8 @@ const login = asyncHandler( async (req,res) => {
                 role: user.role
             } 
         }, 
-        process.env.ACCESS_TOKEN_SECRET || "Dhruvil12345",
-        {expiresIn: '15m'} // Increased for testing
+        process.env.AT_KEY,
+        {expiresIn: '10s'} // Increased for testing
     );
 
     // Create refresh token
@@ -44,7 +44,7 @@ const login = asyncHandler( async (req,res) => {
                 id: user._id.toString()
             }
         },
-        process.env.REFRESH_TOKEN_SECRET || "Dhruvil12345Refresh",
+        process.env.RT_KEY,
         {expiresIn: '7d'}
     );
 
@@ -93,7 +93,7 @@ const refreshTokenWithRotation = asyncHandler(async (req, res) => {
     // Verify the old refresh token signature
     let decoded;
     try {
-        decoded = jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET || "Dhruvil12345Refresh");
+        decoded = jwt.verify(oldRefreshToken, process.env.RT_KEY);
         console.log('Token decoded for user:', decoded.user.id);
     } catch (error) {
         console.log('Refresh token verification failed:', error.message);
@@ -131,8 +131,8 @@ const refreshTokenWithRotation = asyncHandler(async (req, res) => {
                 role: user.role
             }
         },
-        process.env.ACCESS_TOKEN_SECRET || "Dhruvil12345",
-        { expiresIn: '15m' }
+        process.env.AT_KEY,
+        { expiresIn: '10s' }
     );
 
     // Create new refresh token (rotation)
@@ -142,7 +142,7 @@ const refreshTokenWithRotation = asyncHandler(async (req, res) => {
                 id: user._id.toString()
             }
         },
-        process.env.REFRESH_TOKEN_SECRET || "Dhruvil12345Refresh",
+        process.env.RT_KEY,
         { expiresIn: '7d' }
     );
 

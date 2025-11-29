@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './VerifyOtp.css';
-import api, { Api_Endpoints } from '../service/api';
+import './styles/VerifyOtp.css';
+import api, { Api_Endpoints } from '../../service/api';
 
 const VerifyOtp = ({ onNavigate, pageParams }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);

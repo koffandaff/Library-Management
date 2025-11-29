@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api, { Api_Endpoints } from '../service/api';
-import './AuthorUpdate.css';
+import api, { Api_Endpoints } from '../../service/api';
+import './styles/AuthorUpdate.css';
 
 const AuthorUpdate = ({ onNavigate, authorId }) => {
   const [formData, setFormData] = useState({
