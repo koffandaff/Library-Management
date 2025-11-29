@@ -7,6 +7,7 @@ require('dotenv').config();
 const allowedOrigins = [
     '*',
     'http://localhost:3001/',
+    'library-management-seven-kappa.vercel.app'
 ]
 
 const corsOptions = {
