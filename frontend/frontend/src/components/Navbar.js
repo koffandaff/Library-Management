@@ -89,7 +89,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="profile-link admin-link"
                 >
-                  <span className="material-symbols-outlined">dashboard</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Dashboard</span>
                 </a>
               )}
@@ -103,7 +103,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="profile-link"
                 >
-                  <span className="material-symbols-outlined">add</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Add Book</span>
                 </a>
               )}
@@ -116,7 +116,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link"
               >
-                <span className="material-symbols-outlined">person</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Profile</span>
               </a>
               
@@ -124,7 +124,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 onClick={handleLogout}
                 className="profile-link logout-btn"
               >
-                <span className="material-symbols-outlined">logout</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Logout</span>
               </button>
             </>
@@ -138,7 +138,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link"
               >
-                <span className="material-symbols-outlined">login</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Login</span>
               </a>
               <a 
@@ -149,7 +149,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                 }} 
                 className="profile-link login-btn"
               >
-                <span className="material-symbols-outlined">person_add</span>
+                <span className="material-symbols-outlined"></span>
                 <span>Register</span>
               </a>
             </>
@@ -212,7 +212,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                     }} 
                     className="mobile-profile-link"
                   >
-                    <span className="material-symbols-outlined">dashboard</span>
+                    <span className="material-symbols-outlined"></span>
                     <span>Dashboard</span>
                   </a>
                 )}
@@ -226,7 +226,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                     }} 
                     className="mobile-profile-link"
                   >
-                    <span className="material-symbols-outlined">add</span>
+                    <span className="material-symbols-outlined"></span>
                     <span>Add Book</span>
                   </a>
                 )}
@@ -239,7 +239,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="mobile-profile-link"
                 >
-                  <span className="material-symbols-outlined">person</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Profile</span>
                 </a>
                 
@@ -247,7 +247,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   onClick={handleLogout}
                   className="mobile-profile-link mobile-logout-btn"
                 >
-                  <span className="material-symbols-outlined">logout</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Logout</span>
                 </button>
               </>
@@ -261,7 +261,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="mobile-profile-link"
                 >
-                  <span className="material-symbols-outlined">login</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Login</span>
                 </a>
                 <a 
@@ -272,7 +272,7 @@ const Navbar = ({ isLoggedIn, userRole, onLogout, onNavigate }) => {
                   }} 
                   className="mobile-profile-link mobile-login-btn"
                 >
-                  <span className="material-symbols-outlined">person_add</span>
+                  <span className="material-symbols-outlined"></span>
                   <span>Register</span>
                 </a>
               </>
