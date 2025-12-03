@@ -1,3 +1,5 @@
+https://jsmastery.com/video-kit/93f20ce7-ace5-4a74-997d-3f8262f3e0a3
+
 # 🚀 Complete Next.js + Tailwind CSS CRUD Guide with TypeScript
 
 ## 📚 **Part 1: Foundation & Setup**
