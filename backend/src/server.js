@@ -5,9 +5,6 @@ const cookieparser = require('cookie-parser')
 require('dotenv').config();
 
 const allowedOrigins = [
-    'http://localhost:3001',
-    'https://bzf4dfdp-3001.inc1.devtunnels.ms',
-    'library-management-seven-kappa.vercel.app',
     "https://librarymanagementt.vercel.app/",
 ];
 
