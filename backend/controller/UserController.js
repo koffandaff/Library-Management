@@ -34,7 +34,7 @@ const login = asyncHandler( async (req,res) => {
             } 
         }, 
         process.env.AT_KEY,
-        {expiresIn: '10s'} // Increased for testing
+        {expiresIn: '5m'} // Increased for testing
     );
 
     // Create refresh token
@@ -132,7 +132,7 @@ const refreshTokenWithRotation = asyncHandler(async (req, res) => {
             }
         },
         process.env.AT_KEY,
-        { expiresIn: '10s' }
+        { expiresIn: '5m' }
     );
 
     // Create new refresh token (rotation)
