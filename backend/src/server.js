@@ -5,7 +5,7 @@ const cookieparser = require('cookie-parser')
 require('dotenv').config();
 
 const allowedOrigins = [
-    "https://librarymanagementt.vercel.app/",
+    "https://librarymanagementt.vercel.app",
 ];
 
 const corsOptions = {
